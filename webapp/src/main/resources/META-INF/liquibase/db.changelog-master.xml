@@ -7,10 +7,12 @@
 
     <include file="db.changelog-hibernate.xml" relativeToChangelogFile="true"/>
 
-    <include file="db.changelog-example.xml" relativeToChangelogFile="true"/>
-
-    <!-- Cross Domain Constraints -->
-
-    <include file="db.changelog-constraint.xml" relativeToChangelogFile="true"/>
+    <include file="db.changelog-user.xml" relativeToChangelogFile="true"/>
+    
+    <include file="db.changelog-drug.xml" relativeToChangelogFile="true"/>
+    
+    <include file="db.changelog-alert.xml" relativeToChangelogFile="true"/>
+    
+    <include file="db.changelog-stock.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

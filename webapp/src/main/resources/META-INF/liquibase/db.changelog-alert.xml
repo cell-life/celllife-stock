@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="dagmar.timler" id="alert-1">
+        <createTable tableName="alert">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="date" type="DATETIME"/>
+            <column name="level" type="INT"/>
+            <column name="message" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(100)"/>
+            <column name="user" type="BIGINT"/>
+            <column name="drug" type="BIGINT"/>
+        </createTable>
+        
+        <addForeignKeyConstraint 
+        	baseColumnNames="user" baseTableName="alert"
+        	referencedColumnNames="id" referencedTableName="user" 
+        	constraintName="alert_user"
+			deferrable="false" initiallyDeferred="false" />
+
+		<addForeignKeyConstraint 
+        	baseColumnNames="drug" baseTableName="alert"
+        	referencedColumnNames="id" referencedTableName="drug" 
+        	constraintName="alert_drug"
+			deferrable="false" initiallyDeferred="false" />
+
+        <insert tableName="hibernate_sequences">
+            <column name="sequence_name">alert</column>
+            <column name="sequence_next_hi_value">1</column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

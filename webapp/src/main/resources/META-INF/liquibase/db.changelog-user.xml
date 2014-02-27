@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="dagmar.timler" id="user-1">
+        <createTable tableName="user">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="msisdn" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            
+            <column name="encrypted_password" type="VARCHAR(255)"/>
+            <column name="salt" type="VARCHAR(255)"/>
+            <column name="clinic_code" type="VARCHAR(9)"/>
+            <column name="clinic_name" type="VARCHAR(255)"/>
+        </createTable>
+
+        <insert tableName="hibernate_sequences">
+            <column name="sequence_name">user</column>
+            <column name="sequence_next_hi_value">1</column>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
