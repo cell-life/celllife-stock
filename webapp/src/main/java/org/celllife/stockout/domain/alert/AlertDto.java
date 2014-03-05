@@ -3,39 +3,14 @@ package org.celllife.stockout.domain.alert;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.TableGenerator;
+import org.celllife.stockout.domain.drug.DrugDto;
+import org.celllife.stockout.domain.user.UserDto;
 
-import org.celllife.stockout.domain.drug.Drug;
-import org.celllife.stockout.domain.user.User;
+public class AlertDto implements Serializable {
 
-@Entity
-@Cacheable
-/**
- * Domain object to represent Alerts in the system - they are associated with Users and are for a specific Drug.
- * Alerts have a level indicating importance and a status {@see AlertStatus} to indicate the lifecycle of the Alert
- */
-public class Alert implements Serializable {
+	private static final long serialVersionUID = 7075188646105441127L;
 
-	private static final long serialVersionUID = -6226563319400467361L;
-
-	@Id
-    @TableGenerator(
-            name="AlertIdGen", 
-            table="hibernate_sequences", 
-            pkColumnName="sequence_name", 
-            valueColumnName="sequence_next_hi_value", 
-            pkColumnValue="alert")
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="AlertIdGen")
-    private Long id;
+	private Long id;
 	
 	private Date date;
 	
@@ -43,20 +18,27 @@ public class Alert implements Serializable {
 	
 	private String message;
 	
-	@Enumerated(EnumType.STRING)
 	private AlertStatus status;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade={})
-	private User user;
+	private UserDto user;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade={})
-	private Drug drug;
+	private DrugDto drug;
 	
-	public Alert() {
-		
+	public AlertDto() {
+	}
+
+	public AlertDto(Alert alert) {
+		super();
+		this.id = alert.getId();
+		this.date = alert.getDate();
+		this.level = alert.getLevel();
+		this.message = alert.getMessage();
+		this.status = alert.getStatus();
+		this.user = new UserDto(alert.getUser());
+		this.drug = new DrugDto(alert.getDrug());		
 	}
 	
-	public Alert(Date date, Integer level, String message, AlertStatus status, User user, Drug drug) {
+	public AlertDto(Date date, Integer level, String message, AlertStatus status, UserDto user, DrugDto drug) {
 		super();
 		this.date = date;
 		this.level = level;
@@ -106,19 +88,19 @@ public class Alert implements Serializable {
 		this.status = status;
 	}
 
-	public User getUser() {
+	public UserDto getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserDto user) {
 		this.user = user;
 	}
 
-	public Drug getDrug() {
+	public DrugDto getDrug() {
 		return drug;
 	}
 
-	public void setDrug(Drug drug) {
+	public void setDrug(DrugDto drug) {
 		this.drug = drug;
 	}
 
@@ -144,7 +126,7 @@ public class Alert implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Alert other = (Alert) obj;
+		AlertDto other = (AlertDto) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

@@ -2,41 +2,28 @@ package org.celllife.stockout.domain.drug;
 
 import java.io.Serializable;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.TableGenerator;
-
-@Entity
-@Cacheable
-/**
- * Domain object to represent Drugs in the system - they are uniquely identified by barcode
- */
-public class Drug implements Serializable {
+public class DrugDto implements Serializable {
 
 	private static final long serialVersionUID = 5614601761140919135L;
 
-	@Id
-    @TableGenerator(
-            name="DrugIdGen", 
-            table="hibernate_sequences", 
-            pkColumnName="sequence_name", 
-            valueColumnName="sequence_next_hi_value", 
-            pkColumnValue="drug")
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="DrugIdGen")
     private Long id;
 	
 	private String barcode;
 	
 	private String description;
 	
-	public Drug() {
+	public DrugDto() {
 		
 	}
 
-	public Drug(String barcode, String description) {
+	public DrugDto(Drug drug) {
+		super();
+		this.id = drug.getId();
+		this.barcode = drug.getBarcode();
+		this.description = drug.getDescription();
+	}
+
+	public DrugDto(String barcode, String description) {
 		super();
 		this.barcode = barcode;
 		this.description = description;
@@ -83,7 +70,7 @@ public class Drug implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Drug other = (Drug) obj;
+		DrugDto other = (DrugDto) obj;
 		if (barcode == null) {
 			if (other.barcode != null)
 				return false;

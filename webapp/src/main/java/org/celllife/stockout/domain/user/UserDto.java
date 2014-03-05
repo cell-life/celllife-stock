@@ -2,35 +2,17 @@ package org.celllife.stockout.domain.user;
 
 import java.io.Serializable;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.TableGenerator;
+public class UserDto implements Serializable {
 
-@Entity
-@Cacheable
-/**
- * Domain object to represent the User in the system - have a unique msisdn and belong to a clinic
- */
-public class User implements Serializable {
+	private static final long serialVersionUID = -8978444547529630086L;
 
-	private static final long serialVersionUID = 1963884212116602873L;
-
-	@Id
-    @TableGenerator(
-            name="UserIdGen", 
-            table="hibernate_sequences", 
-            pkColumnName="sequence_name", 
-            valueColumnName="sequence_next_hi_value", 
-            pkColumnValue="user")
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="UserIdGen")
-    private Long id;
+	private Long id;
 	
 	private String msisdn;
 	
 	private String encryptedPassword;
+
+	private String password; // this is used for creation of users + password resets
 	
 	private String salt;
 	
@@ -38,15 +20,24 @@ public class User implements Serializable {
 	
 	private String clinicName;
 	
-	public User() {
+	public UserDto() {
 		
 	}
+	
+	public UserDto(User user) {
+		super();
+		this.id = user.getId();
+		this.msisdn = user.getMsisdn();
+		this.encryptedPassword = user.getEncryptedPassword();
+		this.salt = user.getSalt();
+		this.clinicCode = user.getClinicCode();
+		this.clinicName = user.getClinicName();
+	}
 
-	public User(String msisdn, String encryptedPassword, String salt, String clinicCode, String clinicName) {
+	public UserDto(String msisdn, String password, String clinicCode, String clinicName) {
 		super();
 		this.msisdn = msisdn;
-		this.encryptedPassword = encryptedPassword;
-		this.salt = salt;
+		this.password = password;
 		this.clinicCode = clinicCode;
 		this.clinicName = clinicName;
 	}
@@ -73,6 +64,14 @@ public class User implements Serializable {
 
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getSalt() {
@@ -116,7 +115,7 @@ public class User implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		UserDto other = (UserDto) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

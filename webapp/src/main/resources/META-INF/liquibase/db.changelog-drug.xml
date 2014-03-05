@@ -9,7 +9,9 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="description" type="VARCHAR(255)"/>
-            <column name="barcode" type="VARCHAR(255)"/>
+            <column name="barcode" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
         </createTable>
 
         <insert tableName="hibernate_sequences">

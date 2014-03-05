@@ -3,63 +3,44 @@ package org.celllife.stockout.domain.stock;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.TableGenerator;
-
 import org.celllife.stockout.domain.drug.Drug;
+import org.celllife.stockout.domain.drug.DrugDto;
 import org.celllife.stockout.domain.user.User;
+import org.celllife.stockout.domain.user.UserDto;
 
-@Entity
-@Cacheable
-/**
- * Domain object to represent Stock in the system - type (@see StockType) is either a stock take or a stock arrival
- * and is associated with a specific User and is for a specific Drug
- */
-public class Stock implements Serializable {
+public class StockDto implements Serializable {
 
 	private static final long serialVersionUID = -815967956156971026L;
 
-	@Id
-    @TableGenerator(
-            name="StockIdGen", 
-            table="hibernate_sequences", 
-            pkColumnName="sequence_name", 
-            valueColumnName="sequence_next_hi_value", 
-            pkColumnValue="stock")
-    @GeneratedValue(strategy=GenerationType.TABLE, generator="StockIdGen")
     private Long id;
 	
 	private Date date;
 	private Integer quantity;
-	
-	@Enumerated(EnumType.STRING)
 	private StockType type;
+	private UserDto user;
+	private DrugDto drug;
 	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {})
-	private User user;
-	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {})
-	private Drug drug;
-	
-	public Stock() {
+	public StockDto() {
 		
 	}
+	
+	public StockDto(Stock stock) {
+		super();
+		this.id = stock.getId();
+		this.date = stock.getDate();
+		this.quantity = stock.getQuantity();
+		this.type = stock.getType();
+		this.user = new UserDto(stock.getUser());
+		this.drug = new DrugDto(stock.getDrug());		
+	}
 
-	public Stock(Date date, Integer quantity, StockType type, User user, Drug drug) {
+	public StockDto(Date date, Integer quantity, StockType type, User user, Drug drug) {
 		super();
 		this.date = date;
 		this.quantity = quantity;
 		this.type = type;
-		this.user = user;
-		this.drug = drug;
+		this.user = new UserDto(user);
+		this.drug = new DrugDto(drug);
 	}
 
 	public Long getId() {
@@ -94,19 +75,19 @@ public class Stock implements Serializable {
 		this.type = type;
 	}
 
-	public User getUser() {
+	public UserDto getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserDto user) {
 		this.user = user;
 	}
 
-	public Drug getDrug() {
+	public DrugDto getDrug() {
 		return drug;
 	}
 
-	public void setDrug(Drug drug) {
+	public void setDrug(DrugDto drug) {
 		this.drug = drug;
 	}
 
@@ -132,7 +113,7 @@ public class Stock implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Stock other = (Stock) obj;
+		StockDto other = (StockDto) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

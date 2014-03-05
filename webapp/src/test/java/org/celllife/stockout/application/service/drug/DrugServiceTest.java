@@ -1,8 +1,8 @@
-package org.celllife.stockout.domain;
+package org.celllife.stockout.application.service.drug;
 
 import junit.framework.Assert;
 
-import org.celllife.stockout.domain.drug.Drug;
+import org.celllife.stockout.domain.drug.DrugDto;
 import org.celllife.stockout.domain.drug.DrugRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({
+		"classpath:/META-INF/spring/spring-application.xml",
         "classpath:/META-INF/spring/spring-cache.xml",
         "classpath:/META-INF/spring/spring-config.xml",
         "classpath:/META-INF/spring/spring-domain.xml",
@@ -20,22 +21,26 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "classpath:/META-INF/spring/spring-tx.xml",
         "classpath:/META-INF/spring-data/spring-data-jpa.xml"
 })
-public class DrugRepositoryTest {
+public class DrugServiceTest {
 
-    @Autowired
-    private DrugRepository drugRepository;
-
-    @Test
-    public void testCreateOne() throws Exception {
-    	String barcode = "0762837491";
-    	Drug drug = null;
-    	try {
-    		drug = new Drug(barcode, "Disprin");
-    		drugRepository.save(drug);    	
-	    	Drug savedDrug = drugRepository.findOneByBarcode(barcode);
-	    	Assert.assertNotNull(savedDrug);
-    	} finally {
-    		if (drug != null) drugRepository.delete(drug);
-    	}
-    }
+	@Autowired
+	DrugService drugService;
+	
+	@Autowired
+	DrugRepository drugRepository;
+	
+	@Test
+	public void testCreateDrug() throws Exception {
+		Long drugId = null;
+		try {
+			DrugDto drug = new DrugDto("123232342234", "Test Drugs");
+			DrugDto savedDrug = drugService.createDrug(drug);
+			drugId = savedDrug.getId();
+			Assert.assertNotNull(savedDrug);
+			Assert.assertNotNull(savedDrug.getId());
+			Assert.assertEquals(drug.getBarcode(), savedDrug.getBarcode());
+		} finally {
+			if (drugId != null) drugRepository.delete(drugId);
+		}
+	}
 }
