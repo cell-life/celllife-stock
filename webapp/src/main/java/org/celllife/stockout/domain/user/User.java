@@ -24,7 +24,9 @@ public class User implements Serializable {
             table="hibernate_sequences", 
             pkColumnName="sequence_name", 
             valueColumnName="sequence_next_hi_value", 
-            pkColumnValue="user")
+            pkColumnValue="user",
+            initialValue=1,
+            allocationSize=1)
     @GeneratedValue(strategy=GenerationType.TABLE, generator="UserIdGen")
     private Long id;
 	
