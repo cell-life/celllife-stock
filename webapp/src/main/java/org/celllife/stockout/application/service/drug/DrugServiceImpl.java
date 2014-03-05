@@ -27,6 +27,9 @@ public class DrugServiceImpl implements DrugService {
 	@Override
 	public DrugDto getDrug(String barcode) {
 		Drug drug = drugRepository.findOneByBarcode(barcode);
+		if (drug == null) {
+			return null;
+		}
 		return new DrugDto(drug);
 	}
 

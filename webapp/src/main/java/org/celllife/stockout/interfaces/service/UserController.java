@@ -31,9 +31,18 @@ public class UserController {
 	@RequestMapping(
 		method = RequestMethod.GET, 
 		produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserDto getUser(@RequestParam("msisdn") String msisdn) {
-		UserDto user = userService.getUser(msisdn);
-		return user;
+	public UserDto getUser(@RequestParam("msisdn") String msisdn, HttpServletResponse response) throws IOException {
+		try {
+			UserDto user = userService.getUser(msisdn);
+	        if (user == null) {
+	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        	return null;
+	        }
+			return user;
+		} catch (StockOutException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			return null;
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

@@ -29,8 +29,19 @@ public class DrugController {
 
 	@ResponseBody 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public DrugDto getDrug(@RequestParam("barcode") String barcode) {
-		return drugService.getDrug(barcode);
+	public DrugDto getDrug(@RequestParam("barcode") String barcode, HttpServletResponse response) throws IOException {
+		try {
+			DrugDto drug = drugService.getDrug(barcode);
+	        if (drug == null) {
+	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        	return null;
+	        } else {
+	        	return drug;
+	        }
+		} catch (StockOutException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			return null;
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

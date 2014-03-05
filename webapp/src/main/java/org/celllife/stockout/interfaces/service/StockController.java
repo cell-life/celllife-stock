@@ -3,7 +3,7 @@ package org.celllife.stockout.interfaces.service;
 import javax.servlet.http.HttpServletResponse;
 
 import org.celllife.stockout.application.service.stock.StockService;
-import org.celllife.stockout.domain.stock.StockDto;
+import org.celllife.stockout.domain.stock.AlertDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -25,8 +25,8 @@ public class StockController {
 
 	@ResponseBody
     @RequestMapping(value = "{stockId}", method = RequestMethod.GET, produces = "application/json")
-    public StockDto getStock(@PathVariable("stockId") Long stockId, HttpServletResponse response) {
-        StockDto stock = stockService.getStock(stockId);
+    public AlertDto getStock(@PathVariable("stockId") Long stockId, HttpServletResponse response) {
+        AlertDto stock = stockService.getStock(stockId);
         if (stock == null) {
         	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         	return null;
@@ -36,15 +36,15 @@ public class StockController {
     }
 	
 	@RequestMapping(value = "/stocktake", method = RequestMethod.POST)
-	public void saveStockTake(@RequestBody StockDto stock, HttpServletResponse response) {
-		StockDto newStock= stockService.createStockTake(stock);
+	public void saveStockTake(@RequestBody AlertDto stock, HttpServletResponse response) {
+		AlertDto newStock= stockService.createStockTake(stock);
 		response.setHeader("Location", baseUrl+"/service/stocks/"+newStock.getId());
         response.setStatus(HttpServletResponse.SC_CREATED);
 	}
 
 	@RequestMapping(value = "/stockarrival", method = RequestMethod.POST)
-	public void saveStockArrival(@RequestBody StockDto stock, HttpServletResponse response) {
-		StockDto newStock= stockService.createStockArrival(stock);
+	public void saveStockArrival(@RequestBody AlertDto stock, HttpServletResponse response) {
+		AlertDto newStock= stockService.createStockArrival(stock);
 		response.setHeader("Location", baseUrl+"/service/stocks/"+newStock.getId());
         response.setStatus(HttpServletResponse.SC_CREATED);
 	}

@@ -1,11 +1,13 @@
 package org.celllife.stockout.interfaces.service;
 
+import java.io.IOException;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.celllife.stockout.application.service.alert.AlertService;
 import org.celllife.stockout.domain.alert.AlertDto;
+import org.celllife.stockout.domain.exception.StockOutException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -35,21 +37,29 @@ public class AlertController {
 
 	@ResponseBody
     @RequestMapping(value = "{alertId}", method = RequestMethod.GET, produces = "application/json")
-    public AlertDto getAlert(@PathVariable("alertId") Long alertId, HttpServletResponse response) {
-        AlertDto alert = alertService.getAlert(alertId);
-        if (alert == null) {
-        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        	return null;
-        } else {
-        	return alert;
-        }
+    public AlertDto getAlert(@PathVariable("alertId") Long alertId, HttpServletResponse response) throws IOException {
+		try {
+	        AlertDto alert = alertService.getAlert(alertId);
+	        if (alert == null) {
+	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        	return null;
+	        } else {
+	        	return alert;
+	        }
+		} catch (StockOutException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			return null;
+		}
     }
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public void saveAlert(@RequestBody AlertDto alert, HttpServletResponse response) {
-		System.out.println("hello!! "+alert);
-		AlertDto newAlert = alertService.createAlert(alert);
-		response.setHeader("Location", baseUrl+"/service/alerts/"+newAlert.getId());
-        response.setStatus(HttpServletResponse.SC_CREATED);
+	public void saveAlert(@RequestBody AlertDto alert, HttpServletResponse response) throws IOException {
+		try {
+			AlertDto newAlert = alertService.createAlert(alert);
+			response.setHeader("Location", baseUrl+"/service/alerts/"+newAlert.getId());
+	        response.setStatus(HttpServletResponse.SC_CREATED);
+		} catch (StockOutException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+		}
 	}
 }

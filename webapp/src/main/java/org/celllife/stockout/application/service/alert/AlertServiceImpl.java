@@ -10,6 +10,7 @@ import org.celllife.stockout.domain.alert.AlertRepository;
 import org.celllife.stockout.domain.alert.AlertStatus;
 import org.celllife.stockout.domain.drug.Drug;
 import org.celllife.stockout.domain.drug.DrugRepository;
+import org.celllife.stockout.domain.exception.StockOutException;
 import org.celllife.stockout.domain.user.User;
 import org.celllife.stockout.domain.user.UserRepository;
 import org.slf4j.Logger;
@@ -33,16 +34,13 @@ public class AlertServiceImpl implements AlertService {
 
 	@Override
 	public AlertDto createAlert(AlertDto alert) {
-		User user = userRepository.findOneByMsisdn(alert.getUser().getMsisdn());
-		Drug drug = drugRepository.findOneByBarcode(alert.getDrug().getBarcode());
-		
-		// FIXME: always assumes that user + drug are found. Should throw Exception if not
-		log.warn("saving alert1 ... "+alert+" user="+user+" drug="+drug);
+		User user = getUser(alert); // will use either msisdn or cliniccode to locate the user
+		Drug drug = getDrug(alert);
 		
 		// save new alert
 		Alert newAlert = convertAlert(alert, user, drug);
-		log.warn("saving alert2 ... "+newAlert+" user="+user+" drug="+drug);
 		newAlert.setStatus(AlertStatus.NEW);
+		log.debug("saving alert "+newAlert+" for user="+user+" and drug="+drug);
 		Alert savedAlert = alertRepository.save(newAlert);
 		
 		// update latest alert to be expired (latest alert is only status NEW or SENT)
@@ -91,6 +89,37 @@ public class AlertServiceImpl implements AlertService {
 		} else {
 			return null;
 		}
+	}
+
+	private User getUser(AlertDto alert) {
+		if (alert.getUser() == null) {
+			throw new StockOutException("No user specified for stock. "+alert);
+		}
+		User user = null;
+		if (alert.getUser().getMsisdn() != null && !alert.getUser().getMsisdn().trim().equals("")) {
+			user = userRepository.findOneByMsisdn(alert.getUser().getMsisdn());
+		}
+		if (alert.getUser().getClinicCode() != null && !alert.getUser().getClinicCode().trim().equals("")) {
+			List<User> users = userRepository.findByClinicCode(alert.getUser().getClinicCode());
+			if (users != null && users.size() > 0) {
+				user = users.get(0);
+			}
+		}
+		if (user == null) {
+			throw new StockOutException("Could not find user with msisdn '"+alert.getUser().getMsisdn()+" or clinicCode '"+alert.getUser().getClinicCode()+"'.");
+		}
+		return user;
+	}
+
+	private Drug getDrug(AlertDto alert) {
+		if (alert.getDrug() == null) {
+			throw new StockOutException("No drug specified for stock. "+alert);
+		}
+		Drug drug = drugRepository.findOneByBarcode(alert.getDrug().getBarcode());
+		if (drug == null) {
+			throw new StockOutException("Could not find drug with barcode '"+alert.getDrug().getBarcode()+"'.");
+		}
+		return drug;
 	}
 
 	private Set<AlertDto> convertAlertCollection(List<Alert> alerts) {

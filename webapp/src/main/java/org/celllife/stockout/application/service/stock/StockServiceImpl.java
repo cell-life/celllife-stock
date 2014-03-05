@@ -5,6 +5,7 @@ import org.celllife.stockout.domain.alert.AlertRepository;
 import org.celllife.stockout.domain.alert.AlertStatus;
 import org.celllife.stockout.domain.drug.Drug;
 import org.celllife.stockout.domain.drug.DrugRepository;
+import org.celllife.stockout.domain.exception.StockOutException;
 import org.celllife.stockout.domain.stock.Stock;
 import org.celllife.stockout.domain.stock.StockDto;
 import org.celllife.stockout.domain.stock.StockRepository;
@@ -35,8 +36,8 @@ public class StockServiceImpl implements StockService {
 
 	@Override
 	public StockDto createStockTake(StockDto stock) {
-		User user = userRepository.findOneByMsisdn(stock.getUser().getMsisdn());
-		Drug drug = drugRepository.findOneByBarcode(stock.getDrug().getBarcode());
+		User user = getUser(stock);
+		Drug drug = getDrug(stock);
 
 		Stock newStock = convert(stock, user, drug);
 		newStock.setType(StockType.ORDER);
@@ -59,8 +60,8 @@ public class StockServiceImpl implements StockService {
 
 	@Override
 	public StockDto createStockArrival(StockDto stock) {
-		User user = userRepository.findOneByMsisdn(stock.getUser().getMsisdn());
-		Drug drug = drugRepository.findOneByBarcode(stock.getDrug().getBarcode());
+		User user = getUser(stock);
+		Drug drug = getDrug(stock);
 
 		Stock newStock = convert(stock, user, drug);
 		newStock.setType(StockType.RECEIVED);
@@ -88,6 +89,28 @@ public class StockServiceImpl implements StockService {
 		} else {
 			return null;
 		}
+	}
+
+	private User getUser(StockDto stock) {
+		if (stock.getUser() == null) {
+			throw new StockOutException("No user specified for stock. "+stock);
+		}
+		User user = userRepository.findOneByMsisdn(stock.getUser().getMsisdn());
+		if (user == null) {
+			throw new StockOutException("Could not find user with msisdn '"+stock.getUser().getMsisdn()+"'.");
+		}
+		return user;
+	}
+
+	private Drug getDrug(StockDto stock) {
+		if (stock.getDrug() == null) {
+			throw new StockOutException("No drug specified for stock. "+stock);
+		}
+		Drug drug = drugRepository.findOneByBarcode(stock.getDrug().getBarcode());
+		if (drug == null) {
+			throw new StockOutException("Could not find drug with barcode '"+stock.getDrug().getBarcode()+"'.");
+		}
+		return drug;
 	}
 	
 	private Stock convert(StockDto stock, User user, Drug drug) {

@@ -1,5 +1,7 @@
 package org.celllife.stockout.domain.user;
 
+import java.util.List;
+
 import javax.persistence.QueryHint;
 
 import org.celllife.stockout.framework.logging.LogLevel;
@@ -15,4 +17,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
     User findOneByMsisdn(@Param("msisdn") String msisdn);
+
+    @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
+    List<User> findByClinicCode(@Param("clinicCode") String clinicCode);
 }
