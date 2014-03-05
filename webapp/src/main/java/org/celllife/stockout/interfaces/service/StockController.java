@@ -1,9 +1,12 @@
 package org.celllife.stockout.interfaces.service;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.celllife.stockout.application.service.stock.StockService;
-import org.celllife.stockout.domain.stock.AlertDto;
+import org.celllife.stockout.domain.exception.StockOutException;
+import org.celllife.stockout.domain.stock.StockDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -25,27 +28,40 @@ public class StockController {
 
 	@ResponseBody
     @RequestMapping(value = "{stockId}", method = RequestMethod.GET, produces = "application/json")
-    public AlertDto getStock(@PathVariable("stockId") Long stockId, HttpServletResponse response) {
-        AlertDto stock = stockService.getStock(stockId);
-        if (stock == null) {
-        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        	return null;
-        } else {
-        	return stock;
-        }
+    public StockDto getStock(@PathVariable("stockId") Long stockId, HttpServletResponse response) throws IOException {
+		try {
+	        StockDto stock = stockService.getStock(stockId);
+	        if (stock == null) {
+	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        	return null;
+	        } else {
+	        	return stock;
+	        }
+		} catch (StockOutException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+			return null;
+		}
     }
 	
 	@RequestMapping(value = "/stocktake", method = RequestMethod.POST)
-	public void saveStockTake(@RequestBody AlertDto stock, HttpServletResponse response) {
-		AlertDto newStock= stockService.createStockTake(stock);
-		response.setHeader("Location", baseUrl+"/service/stocks/"+newStock.getId());
-        response.setStatus(HttpServletResponse.SC_CREATED);
+	public void saveStockTake(@RequestBody StockDto stock, HttpServletResponse response) throws IOException {
+		try {
+			StockDto newStock= stockService.createStockTake(stock);
+			response.setHeader("Location", baseUrl+"/service/stocks/"+newStock.getId());
+	        response.setStatus(HttpServletResponse.SC_CREATED);
+		} catch (StockOutException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+		}
 	}
 
 	@RequestMapping(value = "/stockarrival", method = RequestMethod.POST)
-	public void saveStockArrival(@RequestBody AlertDto stock, HttpServletResponse response) {
-		AlertDto newStock= stockService.createStockArrival(stock);
-		response.setHeader("Location", baseUrl+"/service/stocks/"+newStock.getId());
-        response.setStatus(HttpServletResponse.SC_CREATED);
+	public void saveStockArrival(@RequestBody StockDto stock, HttpServletResponse response) throws IOException {
+		try {
+			StockDto newStock= stockService.createStockArrival(stock);
+			response.setHeader("Location", baseUrl+"/service/stocks/"+newStock.getId());
+	        response.setStatus(HttpServletResponse.SC_CREATED);
+		} catch (StockOutException e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+		}
 	}
 }
