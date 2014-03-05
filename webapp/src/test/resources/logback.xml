@@ -24,6 +24,7 @@
     <!-- Cell-Life -->
 
     <logger name="org.celllife" level="TRACE">
+    	<appender-ref ref="STDOUT" />
     	<appender-ref ref="FILE" />
     </logger>
 
@@ -46,6 +47,7 @@
     <!-- Root -->
 
 	<root level="WARN">
+		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</root>
 
