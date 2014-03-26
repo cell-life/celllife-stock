@@ -6,6 +6,9 @@
                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <security:global-method-security pre-post-annotations="enabled"/>
+    
+    <bean id="msisdnUserDetailsService" class="org.celllife.stockout.application.security.MsisdnUserDetailsService"/>
+    <bean id="encryptedPasswordEncoder" class="org.celllife.stockout.application.security.EncryptedPasswordEncoder"/>
 
     <security:authentication-manager id="httpBasicAuthenticationManager">
         <security:authentication-provider>
@@ -13,6 +16,11 @@
                 <security:user name="${internal.username}" authorities="SYSTEM" password="${internal.password}" />
             </security:user-service>
         </security:authentication-provider>
+        <security:authentication-provider user-service-ref="msisdnUserDetailsService">
+	        <security:password-encoder ref="encryptedPasswordEncoder">
+	            <security:salt-source user-property="salt"/>
+	        </security:password-encoder>
+        </security:authentication-provider>            
         <security:authentication-provider user-service-ref="ldapUserDetailsService">
             <security:password-encoder hash="{ssha}"/>
         </security:authentication-provider>
