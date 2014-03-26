@@ -1,4 +1,4 @@
-package org.celllife.stockout.framework.json
+package org.celllife.stock.framework.json
 
 import groovy.json.JsonSlurper
 import junit.framework.Assert

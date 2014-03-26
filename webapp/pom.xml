@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.celllife.stockout</groupId>
-        <artifactId>celllife-stockout-parent</artifactId>
+        <groupId>org.celllife.stock</groupId>
+        <artifactId>celllife-stock-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.celllife.stockout</groupId>
-    <artifactId>celllife-stockout-webapp</artifactId>
+    <groupId>org.celllife.stock</groupId>
+    <artifactId>celllife-stock-webapp</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -159,7 +159,7 @@
                     <stopKey>STOP</stopKey>
                     <stopPort>9001</stopPort>
                     <webAppConfig>
-                        <contextPath>/stockout</contextPath>
+                        <contextPath>/stock</contextPath>
                     </webAppConfig>
                     <connectors>
                         <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">

@@ -3,12 +3,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.celllife.stockout</groupId>
-    <artifactId>celllife-stockout-parent</artifactId>
+    <groupId>org.celllife.stock</groupId>
+    <artifactId>celllife-stock-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>celllife-stockout-parent</name>
+    <name>celllife-stock-parent</name>
 
     <properties>
         <aspjectj.version>1.7.1</aspjectj.version>

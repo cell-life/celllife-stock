@@ -8,10 +8,10 @@
 	</appender>
 
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-	    <file>${catalina.base}/logs/stockout.log</file>
+	    <file>${catalina.base}/logs/stock.log</file>
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 	      <!-- daily rollover -->
-	      <fileNamePattern>stockout.%d{yyyy-MM-dd}.log</fileNamePattern>
+	      <fileNamePattern>stock.%d{yyyy-MM-dd}.log</fileNamePattern>
 	      <!-- keep 30 days' worth of history -->
 	      <maxHistory>30</maxHistory>
 	    </rollingPolicy>
@@ -23,8 +23,8 @@
 
     <!-- Cell-Life -->
 
-    <logger name="org.celllife" level="TRACE">
-    	<appender-ref ref="FILE" />
+    <logger name="org.celllife" level="DEBUG">
+		<appender-ref ref="FILE" />
     </logger>
 
     <!-- Hibernate -->

@@ -1,4 +1,4 @@
-package org.celllife.stockout.framework.rest
+package org.celllife.stock.framework.rest
 
 import groovyx.net.http.*
 
@@ -9,7 +9,7 @@ import groovyx.net.http.*
  */
 class REST {
 
-    static String contextPath = "/stockout"
+    static String contextPath = "/stock"
 
     static String baseUrl = "http://localhost:9000"
 
