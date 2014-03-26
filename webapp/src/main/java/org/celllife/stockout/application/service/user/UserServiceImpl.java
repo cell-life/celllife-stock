@@ -38,9 +38,9 @@ public class UserServiceImpl implements UserService {
 			throw new StockOutException("Could not encrypt the user's password.", e);
 		}
 
-		log.info("creating user "+newUser);
 		User savedUser = userRepository.save(newUser);
 		log.info("created user "+savedUser);
+
 		return new UserDto(savedUser);
 	}
 
