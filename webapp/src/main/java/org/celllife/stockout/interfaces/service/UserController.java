@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.celllife.stockout.application.service.user.UserService;
 import org.celllife.stockout.domain.exception.StockOutException;
 import org.celllife.stockout.domain.user.UserDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -21,23 +23,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/service/users")
 public class UserController {
 
+	private static Logger log = LoggerFactory.getLogger(UserController.class);
+
 	@Autowired
 	UserService userService;
 
-	@Value("${external.base.url}") 
+	@Value("${external.base.url}")
 	String baseUrl;
 
 	@ResponseBody
-	@RequestMapping(
-		method = RequestMethod.GET, 
-		produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserDto getUser(@RequestParam("msisdn") String msisdn, HttpServletResponse response) throws IOException {
 		try {
 			UserDto user = userService.getUser(msisdn);
-	        if (user == null) {
-	        	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-	        	return null;
-	        }
+			if (user == null) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				return null;
+			}
 			return user;
 		} catch (StockOutException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
@@ -50,8 +52,8 @@ public class UserController {
 		try {
 			// FIXME: lookup the clinic name if clinicName is null (using the clinic service)
 			UserDto newUser = userService.createUser(user);
-			response.setHeader("Location", baseUrl+"/service/users?msisdn="+newUser.getMsisdn());
-	        response.setStatus(HttpServletResponse.SC_CREATED);
+			response.setHeader("Location", baseUrl + "/service/users?msisdn=" + newUser.getMsisdn());
+			response.setStatus(HttpServletResponse.SC_CREATED);
 		} catch (StockOutException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
