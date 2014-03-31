@@ -63,6 +63,7 @@ public class DrugStockWarehouseServiceTest {
 	}
 
 	@Test
+	@Ignore("integration test")
 	public void testStockArrival() throws Exception {
 		User user = new User();
 		user.setClinicCode("0000");
