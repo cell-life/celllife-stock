@@ -37,12 +37,6 @@ public class AlertServiceImpl implements AlertService {
 		User user = getUser(alert); // will use either msisdn or cliniccode to locate the user
 		Drug drug = getDrug(alert);
 		
-		// save new alert
-		Alert newAlert = convertAlert(alert, user, drug);
-		newAlert.setStatus(AlertStatus.NEW);
-		log.debug("saving alert "+newAlert+" for user="+user+" and drug="+drug);
-		Alert savedAlert = alertRepository.save(newAlert);
-		
 		// update latest alert to be expired (latest alert is only status NEW or SENT)
 		Alert oldAlert = alertRepository.findOneLatestByUserAndDrug(user, drug);
 		if (oldAlert != null) {
@@ -54,6 +48,12 @@ public class AlertServiceImpl implements AlertService {
 			oldAlert.setStatus(AlertStatus.EXPIRED);
 			alertRepository.save(oldAlert);
 		}
+
+		// save new alert
+		Alert newAlert = convertAlert(alert, user, drug);
+		newAlert.setStatus(AlertStatus.NEW);
+		log.debug("saving alert "+newAlert+" for user="+user+" and drug="+drug);
+		Alert savedAlert = alertRepository.save(newAlert);
 
 		return new AlertDto(savedAlert);
 	}
