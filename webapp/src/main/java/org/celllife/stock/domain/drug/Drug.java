@@ -30,6 +30,8 @@ public class Drug implements Serializable {
     @GeneratedValue(strategy=GenerationType.TABLE, generator="DrugIdGen")
     private Long id;
 	
+	private String name;
+	
 	private String barcode;
 	
 	private String description;
@@ -41,6 +43,13 @@ public class Drug implements Serializable {
 	public Drug(String barcode, String description) {
 		super();
 		this.barcode = barcode;
+		this.description = description;
+	}
+
+	public Drug(String barcode, String name, String description) {
+		super();
+		this.barcode = barcode;
+		this.name = name;
 		this.description = description;
 	}
 
@@ -66,6 +75,14 @@ public class Drug implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
@@ -101,6 +118,6 @@ public class Drug implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Drug [id=" + id + ", barcode=" + barcode + ", description=" + description + "]";
+		return "Drug [id=" + id + ", name=" + name + ", barcode=" + barcode + ", description=" + description + "]";
 	}
 }

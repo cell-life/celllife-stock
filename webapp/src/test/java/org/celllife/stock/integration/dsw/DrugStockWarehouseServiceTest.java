@@ -10,6 +10,8 @@ import org.celllife.stock.domain.drug.Drug;
 import org.celllife.stock.domain.stock.Stock;
 import org.celllife.stock.domain.stock.StockType;
 import org.celllife.stock.domain.user.User;
+import org.celllife.stock.integration.dsw.DrugStockWarehouseService;
+import org.celllife.stock.test.TestConfiguration;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,21 +20,22 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({
-		"classpath:/META-INF/spring/spring-application.xml",
-        "classpath:/META-INF/spring/spring-cache.xml",
-        "classpath:/META-INF/spring/spring-config.xml",
-        "classpath:/META-INF/spring/spring-domain.xml",
-        "classpath:/META-INF/spring/spring-jdbc.xml",
-        "classpath:/META-INF/spring/spring-orm.xml",
-        "classpath:/META-INF/spring/spring-tx.xml",
-        "classpath:/META-INF/spring-data/spring-data-jpa.xml",
-        "classpath:/META-INF/spring-integration/spring-integration-core.xml"
-})
+@ContextConfiguration(classes = TestConfiguration.class)
 public class DrugStockWarehouseServiceTest {
 	
 	@Autowired
 	DrugStockWarehouseService dswService;
+
+	@Test
+	@Ignore("integration test")
+	public void testAddDrugs() throws Exception {
+		Drug grandpa = new Drug("60015204","Grandpa", "Grandpa 24 tablets");
+		boolean success = dswService.createDrug(grandpa);
+		Assert.assertTrue(success);
+		Drug panado = new Drug("60011053", "Panado", "Panado 500mg 24 tablets");
+		success = dswService.createDrug(panado);
+		Assert.assertTrue(success);
+	}
 
 	@Test
 	@Ignore("integration test")

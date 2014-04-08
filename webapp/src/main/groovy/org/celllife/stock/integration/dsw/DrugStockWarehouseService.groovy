@@ -1,9 +1,8 @@
 package org.celllife.stock.integration.dsw
 
-import java.util.List;
-
-import org.celllife.stock.domain.stock.Stock;
-import org.celllife.stock.domain.user.User;
+import org.celllife.stock.domain.drug.Drug
+import org.celllife.stock.domain.stock.Stock
+import org.celllife.stock.domain.user.User
 
 /**
  * Application service the interfaces with the Drug Stock Warehouse
@@ -33,4 +32,11 @@ public interface DrugStockWarehouseService {
 	 * @return true if the sending of data was successful
 	 */
 	boolean sendActivation(User user, List<Stock> stock);
+
+	/**
+	 * Creates the drug in the DSW
+	 * @param drug Drug to create
+	 * @return true if the drug was created successfully
+	 */
+	boolean createDrug(Drug drug);
 }

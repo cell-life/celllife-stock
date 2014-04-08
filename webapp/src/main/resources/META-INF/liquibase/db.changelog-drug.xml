@@ -21,4 +21,13 @@
 
     </changeSet>
 
+    <changeSet author="dagmar.timler" id="drug-2">
+ 		<preConditions onFail="MARK_RAN">
+ 		    <not><columnExists tableName="drug" columnName="name" /></not>
+ 		</preConditions>
+        <addColumn tableName="drug">
+            <column name="name" type="VARCHAR(100)" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -7,6 +7,8 @@ public class DrugDto implements Serializable {
 	private static final long serialVersionUID = 5614601761140919135L;
 
     private Long id;
+    
+    private String name;
 	
 	private String barcode;
 	
@@ -26,6 +28,13 @@ public class DrugDto implements Serializable {
 	public DrugDto(String barcode, String description) {
 		super();
 		this.barcode = barcode;
+		this.description = description;
+	}
+
+	public DrugDto(String barcode, String name, String description) {
+		super();
+		this.barcode = barcode;
+		this.name = name;
 		this.description = description;
 	}
 
@@ -86,6 +95,6 @@ public class DrugDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Drug [id=" + id + ", barcode=" + barcode + ", description=" + description + "]";
+		return "DrugDto [id=" + id + ", name=" + name + ", barcode=" + barcode + ", description=" + description + "]";
 	}
 }

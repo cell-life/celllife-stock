@@ -1,18 +1,24 @@
 package org.celllife.stock.integration.dsw
 
 import groovyx.net.http.ContentType
+import groovyx.net.http.HttpResponseException
 
 import java.text.SimpleDateFormat
 
+import org.celllife.stock.domain.drug.Drug
 import org.celllife.stock.domain.stock.Stock
-import org.celllife.stock.domain.stock.StockComparator
 import org.celllife.stock.domain.stock.StockType
 import org.celllife.stock.domain.user.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
+
+/**
+ * See: http://drug-stock-preprod.jembi.org:9000/index.html?raml=raml/drug-stock-him.raml
+ */
 @Service
 class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 
@@ -21,6 +27,7 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 	private static String URL_STOCKTAKE = "pharmacies/{id}/stocktakes/{date}";
 	private static String URL_STOCKARRIVALS = "pharmacies/{id}/stockarrivals/{date}";
 	private static String URL_ACTIVATION = "pharmacies/{id}/activation";
+	private static String URL_DRUGS = "drugs";
 
 	private static String DATE_FORMAT = "yyyyMMdd";
 
@@ -36,12 +43,40 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 
 	@Override
 	public boolean sendStockTakes(User user, List<Stock> stock) {
-		sendStock(user, stock, StockType.ORDER);
+		/*{
+			"stockLevels": [
+				{
+					"drugCode": "DRUG-1",
+					"drugCodeType": "NAPPI",
+					"level": 1000
+				},
+				{
+					"drugCode": "DRUG-2",
+					"drugCodeType": "NAPPI",
+					"level": 2000
+				}
+			]
+		}*/
+		return sendStock(user, stock, StockType.ORDER);
 	}
 
 	@Override
 	public boolean sendStockReceived(User user, List<Stock> stock) {
-		sendStock(user, stock, StockType.RECEIVED);
+		/*{
+			"stockArrived": [
+				{
+					"drugCode": "DRUG-1",
+					"drugCodeType": "NAPPI",
+					"quantity": 500
+				},
+				{
+					"drugCode": "DRUG-2",
+					"drugCodeType": "NAPPI",
+					"quantity": 1000
+				}
+			]
+		}*/
+		return sendStock(user, stock, StockType.RECEIVED);
 	}
 	
 	@Override
@@ -57,56 +92,61 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 			stockMap.add(convertStock(s));
 		}
 		activationMap.put("stockLevels", stockMap);
+		/*{
+			"leadTime": 5,
+			"stockLevels": [
+				{
+					"drugCode": "DRUG-1",
+					"drugCodeType": "NAPPI",
+					"level": 1000
+				},
+				{
+					"drugCode": "DRUG-2",
+					"drugCodeType": "NAPPI",
+					"level": 2000
+				}
+			]
+		}*/
 		return post(url, activationMap);
+	}
+
+	@Async("defaultTaskExecutor")
+	@Override
+	public boolean createDrug(Drug drug) {
+		Map<String, Object> drugMap = new HashMap<String, Object>();
+		drugMap.put("barcode", drug.getBarcode());
+		drugMap.put("name", drug.getName());
+		drugMap.put("description", drug.getDescription());
+		List<Map<String, Object>> ids = new ArrayList<Map<String, Object>>();
+		Map<String, Object> idMap = new HashMap<String, Object>();
+		idMap.put("drugCode", drug.getBarcode())
+		idMap.put("drugCodeType", "EAN-13");
+		ids.add(idMap);
+		drugMap.put("identifiers", ids);
+		/*{
+			"name": "Panado",
+			"description": "This is Panado",
+			"identfiers": [
+				{
+					"drugCode": "PANADO",
+					"drugCodeType": "NAPPI"
+				}
+			],
+			"container": "box",
+			"ingredient": "paracetamol",
+			"manufacturer": "The people that make Panado",
+			"form": "pill",
+			"barcode": "1234"
+		}*/
+		return post(URL_DRUGS, drugMap);
 	}
 	
 	private boolean sendStock(User user, List<Stock> stock, StockType type) {
 		if (stock == null || stock.isEmpty()) {
 			return true;
 		}
-		boolean status  = false;
-		if (stock.size() == 1) {
-			// only got one to send
-			Stock s = stock.get(0);
-			if (s.getType() == type) {
-				status = sendStock(stock);
-			}
-		} else {
-			// go through each date
-			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-			Calendar cal = Calendar.getInstance();
-			Collections.sort(stock, new StockComparator());
-			Date firstDate = stock.get(0).getDate();
-			Integer date1 = Integer.valueOf(sdf.format(firstDate));
-			Date lastDate = stock.get(stock.size()-1).getDate();
-			Integer date2 = Integer.valueOf(sdf.format(lastDate));
-			Integer date3 = date1;
-			while (date3 >= date2) {
-				// now send the stock
-				List<Stock> thisDayStock = filterStockList(stock, type, cal.getTime());
-				status = sendStock(user, thisDayStock);
-				if (!status) {
-					log.warn("Could not send stock for date "+cal.getTime()+" so aborting other data. "+thisDayStock);
-					break;
-				}
-				// now go to the previous date
-				cal.add(Calendar.DATE, -1);
-				date3 = Integer.valueOf(sdf.format(cal.getTime()));
-			}
-		}
+		boolean status = sendStock(user, stock);
 		return status;
-	}
-
-	private List<Stock> filterStockList(List<Stock> stock, StockType type, Date date) {
-		List<Stock> stocks = new ArrayList<Stock>();
-		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-		String todayDate = sdf.format(date);
-		for (Stock s : stock) {
-			if (s.getType() == type && sdf.format(s.getDate()).equals(todayDate)) {
-				stocks.add(s)
-			}
-		}
-		return stocks;
 	}
 
 	private boolean sendStock(User user, List<Stock> stock) {
@@ -133,7 +173,7 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 				stockList.add(convertStock(st));
 			}
 			stockMap.put(mapName, stockList);
-			post(url, stockMap);
+			return post(url, stockMap);
 		} else {
 			// no stock to send, so nothing to go wrong!
 			return true;
@@ -151,17 +191,32 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 			log.debug("POST data "+data+" to url "+url);
 			def client = new groovyx.net.http.RESTClient(url)
 			client.auth.basic(username, password)
+			client.handler.'409' = { resp ->
+				println "Duplicate" 
+			}
 			Map<String, Object> body = new HashMap<String, Object>();
 			body.put("requestContentType", ContentType.JSON);
 			body.put("body", data);
-			def response = client.post(body)
+			def response = client.post(body)/* {
+				response.'409' = { resp ->
+					println 'duplicate'
+				}
+			}*/
 			log.debug("POST returned status "+response.status);
-			if (response.status == 409 || response.status == 201) {
+			return true;
+		} catch (HttpResponseException e) {
+			if (e.getStatusCode() == 409) {
 				// if the document already exists or has been created, return a success
 				return true;
+			} else {
+				log.error("Could not send stock. Status="+e.getStatusCode(), e)
+				log.error("URL="+url);
+				log.error("Data="+data);
 			}
 		} catch (Throwable t) {
 			log.error("Could not send stock.", t)
+			log.error("URL="+url);
+			log.error("Data="+data);
 		}
 		return false;
 	}

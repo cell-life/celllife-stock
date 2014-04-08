@@ -51,6 +51,9 @@ public class Stock implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {})
 	private Drug drug;
 	
+	@Enumerated(EnumType.STRING)
+	private StockStatus status;
+	
 	public Stock() {
 		
 	}
@@ -62,6 +65,7 @@ public class Stock implements Serializable {
 		this.type = type;
 		this.user = user;
 		this.drug = drug;
+		this.status = StockStatus.NEW;
 	}
 
 	public Long getId() {
@@ -112,10 +116,18 @@ public class Stock implements Serializable {
 		this.drug = drug;
 	}
 
+	public StockStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(StockStatus status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
 		return "Stock [id=" + id + ", date=" + date + ", quantity=" + quantity + ", type=" + type + ", user=" + user
-				+ ", drug=" + drug + "]";
+				+ ", drug=" + drug + ", status=" + status + "]";
 	}
 
 	@Override

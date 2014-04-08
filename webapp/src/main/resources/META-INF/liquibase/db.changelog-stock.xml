@@ -34,4 +34,13 @@
 
     </changeSet>
 
+    <changeSet author="dagmar.timler" id="stock-2">
+ 		<preConditions onFail="MARK_RAN">
+ 		    <not><columnExists tableName="stock" columnName="status" /></not>
+ 		</preConditions>
+        <addColumn tableName="stock">
+            <column name="status" type="VARCHAR(100)" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

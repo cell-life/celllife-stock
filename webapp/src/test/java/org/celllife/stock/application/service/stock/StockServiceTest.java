@@ -1,10 +1,10 @@
 package org.celllife.stock.application.service.stock;
 
 import java.util.Date;
+import java.util.List;
 
 import junit.framework.Assert;
 
-import org.celllife.stock.application.service.stock.StockService;
 import org.celllife.stock.domain.alert.Alert;
 import org.celllife.stock.domain.alert.AlertRepository;
 import org.celllife.stock.domain.alert.AlertStatus;
@@ -16,6 +16,7 @@ import org.celllife.stock.domain.stock.StockRepository;
 import org.celllife.stock.domain.stock.StockType;
 import org.celllife.stock.domain.user.User;
 import org.celllife.stock.domain.user.UserRepository;
+import org.celllife.stock.test.TestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({
-		"classpath:/META-INF/spring/spring-application.xml",
-        "classpath:/META-INF/spring/spring-cache.xml",
-        "classpath:/META-INF/spring/spring-config.xml",
-        "classpath:/META-INF/spring/spring-domain.xml",
-        "classpath:/META-INF/spring/spring-jdbc.xml",
-        "classpath:/META-INF/spring/spring-orm.xml",
-        "classpath:/META-INF/spring/spring-tx.xml",
-        "classpath:/META-INF/spring-data/spring-data-jpa.xml"
-})
+@ContextConfiguration(classes = TestConfiguration.class)
 public class StockServiceTest {
 
 	// service being tested
@@ -73,7 +65,10 @@ public class StockServiceTest {
 			
     	} finally {
     		if (alert != null) alertRepository.delete(alert);
-    		if (stock != null) stockRepository.delete(stock);
+    		List<Stock> stocks = stockRepository.findByDrug(drug);
+    		for (Stock s : stocks) {
+    			stockRepository.delete(s);
+    		}
         	if (user != null) userRepository.delete(user);
         	if (drug != null) drugRepository.delete(drug);
     	}
@@ -106,7 +101,10 @@ public class StockServiceTest {
 			
     	} finally {
     		if (alert != null) alertRepository.delete(alert);
-    		if (stock != null) stockRepository.delete(stock);
+    		List<Stock> stocks = stockRepository.findByDrug(drug);
+    		for (Stock s : stocks) {
+    			stockRepository.delete(s);
+    		}
         	if (user != null) userRepository.delete(user);
         	if (drug != null) drugRepository.delete(drug);
     	}
