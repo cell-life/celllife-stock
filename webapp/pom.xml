@@ -496,6 +496,22 @@
             <artifactId>commons-io</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Communicate -->
+        <dependency>
+            <groupId>org.celllife.mobilisr</groupId>
+		    <artifactId>org.celllife.mobilisr.client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.celllife.mobilisr</groupId>
+            <artifactId>org.celllife.mobilisr.api</artifactId>
+        </dependency>
+        
+        <!-- Cell-Life mail utility -->
+        <dependency>
+    	    <groupId>org.celllife.mail</groupId>
+    	    <artifactId>celllife-mail</artifactId>
+        </dependency>
 
         <!-- Groovy -->
 

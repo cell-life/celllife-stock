@@ -434,6 +434,25 @@
                 <version>2.1</version>
             </dependency>
 
+            <!-- Communicate -->
+            <dependency>
+                <groupId>org.celllife.mobilisr</groupId>
+                <artifactId>org.celllife.mobilisr.client</artifactId>
+                <version>2.13</version>
+            </dependency>
+            <dependency>
+                <groupId>org.celllife.mobilisr</groupId>
+                <artifactId>org.celllife.mobilisr.api</artifactId>
+                <version>2.13</version>
+            </dependency>
+            
+            <!-- Cell-Life mail utility -->
+            <dependency>
+        	    <groupId>org.celllife.mail</groupId>
+        	    <artifactId>celllife-mail</artifactId>
+        	    <version>1.0.0</version>
+            </dependency>
+
             <!-- Groovy -->
 
             <dependency>

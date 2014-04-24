@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet author="dagmar.timler" id="notification-1">
+        <createTable tableName="notification">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="date" type="DATETIME"/>
+            <column name="recipient" type="VARCHAR(255)"/>
+            <column name="message" type="VARCHAR(500)"/>
+            <column name="alert" type="BIGINT"/>
+        </createTable>
+        
+        <!-- <addForeignKeyConstraint 
+        	baseColumnNames="alert" baseTableName="notification"
+        	referencedColumnNames="id" referencedTableName="alert" 
+        	constraintName="notification_alert"
+			deferrable="false" initiallyDeferred="false" />
+		-->
+
+        <insert tableName="hibernate_sequences">
+            <column name="sequence_name">notification</column>
+            <column name="sequence_next_hi_value">1</column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
