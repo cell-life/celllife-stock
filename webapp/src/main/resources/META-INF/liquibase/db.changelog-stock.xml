@@ -16,13 +16,13 @@
         </createTable>
         
         <addForeignKeyConstraint 
-        	baseColumnNames="user" baseTableName="alert"
+        	baseColumnNames="user" baseTableName="stock"
         	referencedColumnNames="id" referencedTableName="user" 
         	constraintName="stock_user"
 			deferrable="false" initiallyDeferred="false" />
 
 		<addForeignKeyConstraint 
-        	baseColumnNames="drug" baseTableName="alert"
+        	baseColumnNames="drug" baseTableName="stock"
         	referencedColumnNames="id" referencedTableName="drug" 
         	constraintName="stock_drug"
 			deferrable="false" initiallyDeferred="false" />
