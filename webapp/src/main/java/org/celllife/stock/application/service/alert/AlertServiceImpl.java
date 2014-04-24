@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AlertServiceImpl implements AlertService {
@@ -33,6 +34,7 @@ public class AlertServiceImpl implements AlertService {
 	DrugRepository drugRepository;
 
 	@Override
+	@Transactional
 	public AlertDto createAlert(AlertDto alert) {
 		User user = getUser(alert); // will use either msisdn or cliniccode to locate the user
 		Drug drug = getDrug(alert);
@@ -59,14 +61,15 @@ public class AlertServiceImpl implements AlertService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Set<AlertDto> getOpenAlerts(String msisdn) {
 		User user = userRepository.findOneByMsisdn(msisdn);
-		List<Alert> alerts = alertRepository.findNewByUser(user);
+		List<Alert> alerts = alertRepository.findOpenByUser(user);
 		return convertAlertCollection(alerts);
 	}
 
 	@Override
-	// FIXME: desperately need a transaction here
+	@Transactional
 	public Set<AlertDto> getNewAlerts(String msisdn) {
 		User user = userRepository.findOneByMsisdn(msisdn);
 		List<Alert> alerts = alertRepository.findNewByUser(user);
@@ -82,6 +85,7 @@ public class AlertServiceImpl implements AlertService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public AlertDto getAlert(Long id) {
 		Alert alert = alertRepository.findOne(id);
 		if (alert != null) {
@@ -93,7 +97,7 @@ public class AlertServiceImpl implements AlertService {
 
 	private User getUser(AlertDto alert) {
 		if (alert.getUser() == null) {
-			throw new StockException("No user specified for stock. "+alert);
+			throw new StockException("No user specified for alert. "+alert);
 		}
 		User user = null;
 		if (alert.getUser().getMsisdn() != null && !alert.getUser().getMsisdn().trim().equals("")) {
@@ -113,7 +117,7 @@ public class AlertServiceImpl implements AlertService {
 
 	private Drug getDrug(AlertDto alert) {
 		if (alert.getDrug() == null) {
-			throw new StockException("No drug specified for stock. "+alert);
+			throw new StockException("No drug specified for alert. "+alert);
 		}
 		Drug drug = drugRepository.findOneByBarcode(alert.getDrug().getBarcode());
 		if (drug == null) {

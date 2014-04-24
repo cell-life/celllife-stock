@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StockServiceImpl implements StockService {
@@ -35,6 +36,7 @@ public class StockServiceImpl implements StockService {
 	DrugRepository drugRepository;
 
 	@Override
+	@Transactional
 	public StockDto createStockTake(StockDto stock) {
 		User user = getUser(stock);
 		Drug drug = getDrug(stock);
@@ -59,6 +61,7 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
+	@Transactional
 	public StockDto createStockArrival(StockDto stock) {
 		User user = getUser(stock);
 		Drug drug = getDrug(stock);
@@ -82,6 +85,7 @@ public class StockServiceImpl implements StockService {
 		return new StockDto(savedStock);
 	}
 
+	@Transactional(readOnly = true)
 	public 	StockDto getStock(Long id) {
 		Stock stock = stockRepository.findOne(id);
 		if (stock != null) {

@@ -8,6 +8,7 @@ import org.celllife.stock.domain.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
 	
@@ -17,6 +18,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	UserRepository userRepository;
 
 	@Override
+	@Transactional(readOnly = true)
 	public boolean authenticate(String msisdn, String encryptedPassword) {
 		User user = null;
 		if (msisdn != null && !msisdn.trim().equals("")) {

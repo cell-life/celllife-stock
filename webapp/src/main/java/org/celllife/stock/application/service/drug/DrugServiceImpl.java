@@ -6,6 +6,7 @@ import org.celllife.stock.domain.drug.DrugRepository;
 import org.celllife.stock.domain.exception.StockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DrugServiceImpl implements DrugService {
@@ -14,6 +15,7 @@ public class DrugServiceImpl implements DrugService {
 	DrugRepository drugRepository;
 	
 	@Override
+	@Transactional
 	public DrugDto createDrug(DrugDto drug) {
 		Drug existingDrug = drugRepository.findOneByBarcode(drug.getBarcode());
 		if (existingDrug != null) {
@@ -25,6 +27,7 @@ public class DrugServiceImpl implements DrugService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public DrugDto getDrug(String barcode) {
 		Drug drug = drugRepository.findOneByBarcode(barcode);
 		if (drug == null) {

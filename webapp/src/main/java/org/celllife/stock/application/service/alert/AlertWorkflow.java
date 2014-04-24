@@ -4,7 +4,9 @@ import java.util.Date;
 
 import org.celllife.stock.domain.alert.Alert;
 import org.celllife.stock.domain.alert.AlertStatus;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public enum AlertWorkflow {
 			
 	NEW {
