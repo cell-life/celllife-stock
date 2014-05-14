@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class MsisdnUserDetailsService implements UserDetailsService {
 	
 	//private static Logger log = LoggerFactory.getLogger(MsisdnUserDetailsService.class);
