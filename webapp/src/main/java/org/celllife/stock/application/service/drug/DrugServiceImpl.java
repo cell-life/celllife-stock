@@ -37,7 +37,7 @@ public class DrugServiceImpl implements DrugService {
 	}
 
 	private Drug convertDrug(DrugDto drug) {
-		Drug newDrug = new Drug(drug.getBarcode(), drug.getDescription());
+		Drug newDrug = new Drug(drug.getBarcode(), drug.getName(), drug.getDescription());
 		return newDrug;
 	}
 }
