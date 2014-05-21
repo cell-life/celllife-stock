@@ -1,5 +1,12 @@
 package org.celllife.stock.application.service.stock;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.celllife.stock.domain.alert.Alert;
 import org.celllife.stock.domain.alert.AlertRepository;
 import org.celllife.stock.domain.alert.AlertStatus;
@@ -93,6 +100,58 @@ public class StockServiceImpl implements StockService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Set<StockDto> getTodayStockTake(String msisdn) {
+		return getTodayStock(msisdn, StockType.ORDER);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Set<StockDto> getTodayStockArrival(String msisdn) {
+		return getTodayStock(msisdn, StockType.RECEIVED);
+	}
+
+	private Set<StockDto> getTodayStock(String msisdn, StockType type) {
+		List<Stock> stocks = new ArrayList<Stock>();
+		if (msisdn != null && !msisdn.isEmpty()) {
+			User user = userRepository.findOneByMsisdn(msisdn);
+			if (user == null) {
+				throw new StockException("Could not find user with msisdn '"+msisdn+"'.");
+			}
+			stocks = stockRepository.findByDateBetweenByUserAndType(
+					getBeginningOfToday(), getEndOfToday(), user, type);
+		} else {
+			// find all stocks
+			stocks = stockRepository.findByDateBetweenAndType(
+					getBeginningOfToday(), getEndOfToday(), type);
+		}
+		Set<StockDto> stockDtos = new HashSet<StockDto>();
+		for (Stock s : stocks) {
+			StockDto dto = new StockDto(s);
+			stockDtos.add(dto);
+		}
+		return stockDtos;
+	}
+
+	private Date getBeginningOfToday() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	private Date getEndOfToday() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 59);
+		return cal.getTime();
 	}
 
 	private User getUser(StockDto stock) {

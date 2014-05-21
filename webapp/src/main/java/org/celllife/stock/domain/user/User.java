@@ -40,6 +40,8 @@ public class User implements Serializable {
 	
 	private String clinicName;
 	
+	private String coordinates;
+	
 	public User() {
 		
 	}
@@ -101,6 +103,14 @@ public class User implements Serializable {
 		this.clinicName = clinicName;
 	}
 
+	public String getCoordinates() {
+		return coordinates;
+	}
+
+	public void setCoordinates(String coordinates) {
+		this.coordinates = coordinates;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -135,6 +145,6 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", msisdn=" + msisdn + ", encryptedPassword=" + encryptedPassword + ", salt=" + salt
-				+ ", clinicCode=" + clinicCode + ", clinicName=" + clinicName + "]";
+				+ ", clinicCode=" + clinicCode + ", clinicName=" + clinicName + ", coordinates=" + coordinates + "]";
 	}
 }

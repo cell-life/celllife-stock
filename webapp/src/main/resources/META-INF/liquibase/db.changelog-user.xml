@@ -25,4 +25,13 @@
 
     </changeSet>
 
+        <changeSet author="dagmar.timler" id="user-2">
+ 		<preConditions onFail="MARK_RAN">
+ 		    <not><columnExists tableName="user" columnName="coordinates" /></not>
+ 		</preConditions>
+        <addColumn tableName="user">
+            <column name="coordinates" type="VARCHAR(255)" />
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

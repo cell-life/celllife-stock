@@ -23,6 +23,12 @@ public interface StockRepository extends PagingAndSortingRepository<Stock, Long>
 			@Param("user") User user, 
 			@Param("type") StockType type);
 
+	@Query("SELECT s FROM Stock s WHERE s.date >= :startDate and s.date <= :endDate AND s.type = :type")
+	List<Stock> findByDateBetweenAndType(
+			@Param("startDate") Date startDate, 
+			@Param("endDate") Date endDate, 
+			@Param("type") StockType type);
+
 	@Query("SELECT s from Stock s where s.type = :type and status = 'NEW'")
 	List<Stock> findNewByType(@Param("type") StockType type);
 

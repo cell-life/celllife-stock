@@ -29,4 +29,14 @@ public interface AlertRepository extends PagingAndSortingRepository<Alert, Long>
 	@QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
 	@Query("SELECT a FROM Alert a WHERE a.user = :user AND status = 'NEW'")
 	List<Alert> findNewByUser(@Param("user") User user);
+
+    @Query("select new org.celllife.stock.domain.alert.AlertSummaryDto("
+    		+ "u.msisdn, u.clinicCode, u.clinicName, u.coordinates, "
+    		+ "(select count(*) from Alert a1 where a1.user = u.id and a1.status in ('NEW','SENT') and a1.level = 1), " 
+    		+ "(select count(*) from Alert a2 where a2.user = u.id and a2.status in ('NEW','SENT') and a2.level = 2), "
+    		+ "(select count(*) from Alert a3 where a3.user = u.id and a3.status in ('NEW','SENT') and a3.level = 3)"
+    		+ ") "
+            + "from User u "
+            + "group by u.msisdn, u.clinicCode, u.clinicName")
+	List<AlertSummaryDto> calculateAlertSummary();
 }

@@ -3,6 +3,7 @@ package org.celllife.stock.application.service.alert;
 import java.util.Set;
 
 import org.celllife.stock.domain.alert.AlertDto;
+import org.celllife.stock.domain.alert.AlertSummaryDto;
 
 public interface AlertService {
 
@@ -39,4 +40,10 @@ public interface AlertService {
 	 * @return Alert, or null if none found
 	 */
 	AlertDto getAlert(Long id);
+
+	
+	/**
+	 * Retrieves an alert summary report showing the number of open alerts per clinic
+	 */
+	Set<AlertSummaryDto> getAlertSummary();
 }

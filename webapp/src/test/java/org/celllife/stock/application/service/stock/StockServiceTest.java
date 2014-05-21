@@ -2,6 +2,7 @@ package org.celllife.stock.application.service.stock;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -55,7 +56,7 @@ public class StockServiceTest {
 			user = createAndSaveUser("0738847292");
 			drug = createAndSaveDrug("1112223333");
 			alert = createAndSaveAlert(1, user, drug);
-			stock = createStock(user, drug);
+			stock = createStock(user, drug, StockType.ORDER);
 			
 			stockService.createStockTake(new StockDto(stock));
 
@@ -85,7 +86,7 @@ public class StockServiceTest {
 			user = createAndSaveUser("0738847292");
 			drug = createAndSaveDrug("1112223333");
 			alert = createAndSaveAlert(1, user, drug);
-			stock = createStock(user, drug);
+			stock = createStock(user, drug, StockType.ORDER);
 			
 			stockService.createStockTake(new StockDto(stock));
 
@@ -110,8 +111,38 @@ public class StockServiceTest {
     	}
 	}
 
-	private Stock createStock(User user, Drug drug) {
-		Stock stock = new Stock(new Date(), 22, StockType.ORDER, user, drug);
+	@Test
+	public void testGetTodayStock() {
+		User user = null;
+		Drug drug = null;
+		Stock stock1 = null;
+		Stock stock2 = null;
+		
+		try {
+			user = createAndSaveUser("0738847292");
+			drug = createAndSaveDrug("1112223333");
+			stock1 = createStock(user, drug, StockType.ORDER);
+			stock2 = createStock(user, drug, StockType.RECEIVED);
+			StockDto savedStock1 = stockService.createStockTake(new StockDto(stock1));
+			stockService.createStockArrival(new StockDto(stock2));
+
+			Set<StockDto> stocks = stockService.getTodayStockTake("0738847292");
+			Assert.assertNotNull(stocks);
+			Assert.assertEquals(1, stocks.size());
+			Assert.assertTrue(stocks.contains(savedStock1));
+			
+    	} finally {
+    		List<Stock> stocks = stockRepository.findByDrug(drug);
+    		for (Stock s : stocks) {
+    			stockRepository.delete(s);
+    		}
+        	if (user != null) userRepository.delete(user);
+        	if (drug != null) drugRepository.delete(drug);
+    	}
+	}
+
+	private Stock createStock(User user, Drug drug, StockType type) {
+		Stock stock = new Stock(new Date(), 22, type, user, drug);
     	return stock;
 	}
 	

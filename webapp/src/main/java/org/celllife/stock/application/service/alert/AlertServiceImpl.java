@@ -8,6 +8,7 @@ import org.celllife.stock.domain.alert.Alert;
 import org.celllife.stock.domain.alert.AlertDto;
 import org.celllife.stock.domain.alert.AlertRepository;
 import org.celllife.stock.domain.alert.AlertStatus;
+import org.celllife.stock.domain.alert.AlertSummaryDto;
 import org.celllife.stock.domain.drug.Drug;
 import org.celllife.stock.domain.drug.DrugRepository;
 import org.celllife.stock.domain.exception.StockException;
@@ -93,6 +94,17 @@ public class AlertServiceImpl implements AlertService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Set<AlertSummaryDto> getAlertSummary() {
+		List<AlertSummaryDto> summary = alertRepository.calculateAlertSummary();
+		Set<AlertSummaryDto> alertSummary = new HashSet<AlertSummaryDto>();
+		for (AlertSummaryDto dto : summary) {
+			alertSummary.add(dto);
+		}
+		return alertSummary;
 	}
 
 	private User getUser(AlertDto alert) {

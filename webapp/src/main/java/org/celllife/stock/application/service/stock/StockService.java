@@ -1,5 +1,7 @@
 package org.celllife.stock.application.service.stock;
 
+import java.util.Set;
+
 import org.celllife.stock.domain.stock.StockDto;
 
 public interface StockService {
@@ -28,4 +30,18 @@ public interface StockService {
 	 * @return Stock, or null if none found
 	 */
 	StockDto getStock(Long id);
+
+	/**
+	 * Retrieve today's stock takes
+	 * @param msisdn String, can be null, specifies which clinic stock takes to return
+	 * @return
+	 */
+	Set<StockDto> getTodayStockTake(String msisdn);
+
+	/**
+	 * Retrieve today's stock received
+	 * @param msisdn String, can be null, specifies which clinic stock takes to return
+	 * @return
+	 */
+	Set<StockDto> getTodayStockArrival(String msisdn);
 }

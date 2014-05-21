@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.celllife.stock.application.service.alert.AlertService;
 import org.celllife.stock.domain.alert.AlertDto;
+import org.celllife.stock.domain.alert.AlertSummaryDto;
 import org.celllife.stock.domain.exception.StockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,12 @@ public class AlertController {
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public Set<AlertDto> getAlerts(@RequestParam("msisdn") String msisdn) {
 		return alertService.getNewAlerts(msisdn);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/summary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public Set<AlertSummaryDto> getAlertSummary() {
+		return alertService.getAlertSummary();
 	}
 
 	@ResponseBody

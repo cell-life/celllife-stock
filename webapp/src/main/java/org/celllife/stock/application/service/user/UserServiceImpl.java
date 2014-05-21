@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
 	private User convertUser(UserDto user) {
 		User newUser = new User(user.getMsisdn(), user.getEncryptedPassword(), user.getSalt(), 
 				user.getClinicCode(), user.getClinicName());
+		newUser.setCoordinates(user.getCoordinates());
 		return newUser;
 	}
 }

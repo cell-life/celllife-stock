@@ -5,8 +5,8 @@ import java.util.Date;
 
 import org.celllife.stock.domain.drug.Drug;
 import org.celllife.stock.domain.drug.DrugDto;
+import org.celllife.stock.domain.user.ClinicDto;
 import org.celllife.stock.domain.user.User;
-import org.celllife.stock.domain.user.UserDto;
 
 public class StockDto implements Serializable {
 
@@ -17,7 +17,7 @@ public class StockDto implements Serializable {
 	private Date date;
 	private Integer quantity;
 	private StockType type;
-	private UserDto user;
+	private ClinicDto user;
 	private DrugDto drug;
 	
 	public StockDto() {
@@ -30,7 +30,7 @@ public class StockDto implements Serializable {
 		this.date = stock.getDate();
 		this.quantity = stock.getQuantity();
 		this.type = stock.getType();
-		this.user = new UserDto(stock.getUser());
+		this.user = new ClinicDto(stock.getUser());
 		this.drug = new DrugDto(stock.getDrug());		
 	}
 
@@ -39,7 +39,7 @@ public class StockDto implements Serializable {
 		this.date = date;
 		this.quantity = quantity;
 		this.type = type;
-		this.user = new UserDto(user);
+		this.user = new ClinicDto(user);
 		this.drug = new DrugDto(drug);
 	}
 
@@ -75,12 +75,12 @@ public class StockDto implements Serializable {
 		this.type = type;
 	}
 
-	public UserDto getUser() {
+	public ClinicDto getUser() {
 		return user;
 	}
 
-	public void setUser(UserDto user) {
-		this.user = user;
+	public void setUser(ClinicDto clinic) {
+		this.user = clinic;
 	}
 
 	public DrugDto getDrug() {
@@ -93,7 +93,7 @@ public class StockDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Stock [id=" + id + ", date=" + date + ", quantity=" + quantity + ", type=" + type + ", user=" + user
+		return "Stock [id=" + id + ", date=" + date + ", quantity=" + quantity + ", type=" + type + ", clinic=" + user
 				+ ", drug=" + drug + "]";
 	}
 
