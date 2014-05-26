@@ -13,25 +13,15 @@ import org.springframework.security.access.prepost.PreAuthorize
 
 import java.text.SimpleDateFormat
 
-import org.celllife.stock.framework.restclient.RESTClient 
+import org.celllife.stock.framework.restclient.RESTClient
 
 @Controller
 class MapController {
 
-    @Value('${external.base.url}')
-    def String externalBaseUrl;
-    
-    @Autowired
-    RESTClient client;
 
-  
-    @RequestMapping(value="/map", method = RequestMethod.GET)
-    def getMap(Model model) {
+	@RequestMapping(value="/map", method = RequestMethod.GET)
+	def getMap(Model model) {
 
-        //def reports = client.get("${externalBaseUrl}/")
-        //model.put("map", ,map)
-        return "map";
-
-    }
-
+		return "map";
+	}
 }
