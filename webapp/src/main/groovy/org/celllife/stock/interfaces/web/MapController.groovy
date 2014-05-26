@@ -24,17 +24,13 @@ class MapController {
     @Autowired
     RESTClient client;
 
-    @RequestMapping("/map")
-    def index(Model model) {
-        getMap(model)
-    }
-
-    @RequestMapping(value="/service/map", method = RequestMethod.GET)
+  
+    @RequestMapping(value="/map", method = RequestMethod.GET)
     def getMap(Model model) {
 
-        def reports = client.get("${externalBaseUrl}/service/map")
-        model.put("map", ,map)
-        return "service/map";
+        //def reports = client.get("${externalBaseUrl}/")
+        //model.put("map", ,map)
+        return "map";
 
     }
 
