@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>TITLE</title>
+    <title>Stock App Server</title>
 
     <c:set var="url">${pageContext.request.requestURL}</c:set>
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
@@ -24,7 +24,7 @@
             <li><a href="j_spring_cas_security_logout">Logout</a>
         </ul>
          <h2><img src="resources/img/logo.png"></h2>
-        <h3 class="muted">HEADING</h3>
+        <h3 class="muted">Stock App Server</h3>
     </div>
 
     <hr>
@@ -33,7 +33,7 @@
 
     <p>
     <ul>
-        <li>Future Report Here</li>
+        <li><a href="/stock/map">Alert Escalation Map</a></li>
         <li>Future Report Here</li>
     </ul>
     </p>

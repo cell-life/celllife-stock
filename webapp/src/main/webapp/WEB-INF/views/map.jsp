@@ -39,12 +39,11 @@ function initialize() {
 		    	var coords = coord.split(",");
 		    	var lat = coords[0];
 		    	var longitude = coords[1];
-		        alert(lat + " : " + longitude);
-		    	var clinicName = clinic["clinicName"];
-		    	
+		        var clinicName = clinic["clinicName"];
 		    	var clinicLatlng = new google.maps.LatLng(longitude, lat);
 		    	var marker = new google.maps.Marker({
 			        position: clinicLatlng,
+			        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+alertCount+'|FF0000|000000',
 			        map: map,
 			        title: clinicName + ':' + alertCount
 	        	});
