@@ -101,7 +101,6 @@
  <p>
     <ul>
         <li><a href="/stock/map">Alert Escalation Map</a></li>
-        <li>Future Report Here</li>
     </ul>
  </p>
 <!-- </form> -->
