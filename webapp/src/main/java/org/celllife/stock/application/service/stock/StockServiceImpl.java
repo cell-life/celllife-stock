@@ -121,12 +121,18 @@ public class StockServiceImpl implements StockService {
 			if (user == null) {
 				throw new StockException("Could not find user with msisdn '"+msisdn+"'.");
 			}
+			Date start = getBeginningOfToday();
+			Date end = getEndOfToday();
+			log.debug("Getting today's stock "+type+" between "+start+" and "+end+" for msisdn "+msisdn);
 			stocks = stockRepository.findByDateBetweenByUserAndType(
-					getBeginningOfToday(), getEndOfToday(), user, type);
+					start, end, user, type);
 		} else {
 			// find all stocks
+			Date start = getBeginningOfToday();
+			Date end = getEndOfToday();
+			log.debug("Getting today's stock "+type+" between "+start+" and "+end);
 			stocks = stockRepository.findByDateBetweenAndType(
-					getBeginningOfToday(), getEndOfToday(), type);
+					start, end, type);
 		}
 		Set<StockDto> stockDtos = new HashSet<StockDto>();
 		for (Stock s : stocks) {
@@ -138,7 +144,7 @@ public class StockServiceImpl implements StockService {
 
 	private Date getBeginningOfToday() {
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
@@ -147,7 +153,7 @@ public class StockServiceImpl implements StockService {
 
 	private Date getEndOfToday() {
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR, 23);
+		cal.set(Calendar.HOUR_OF_DAY, 23);
 		cal.set(Calendar.MINUTE, 59);
 		cal.set(Calendar.SECOND, 59);
 		cal.set(Calendar.MILLISECOND, 59);
