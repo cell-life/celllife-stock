@@ -21,13 +21,22 @@ class RESTClient {
         client.auth.basic(username, password)
 
         return client.get([:]).data
-    }
-
+     }
     def get(String uri, Map<String, Object> query) {
 
         def client = new groovyx.net.http.RESTClient(uri)
         client.auth.basic(username, password)
 
         return client.get(query:query).data
+    }
+    def postJson(String uri, String query) {
+        def client = new groovyx.net.http.RESTClient(uri)
+        client.auth.basic(username, password)
+        
+        Map<String, Object> body = new HashMap<String, Object>();
+        body.put("requestContentType", ContentType.JSON);
+        body.put("body", query);
+
+        return client.post(body)
     }
 }

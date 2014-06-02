@@ -1,4 +1,11 @@
 package org.celllife.stock.interfaces.web
+import groovyx.net.http.HttpResponseDecorator
+
+import java.security.Principal
+
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import org.springframework.web.servlet.ModelAndView
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -10,8 +17,10 @@ import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.prepost.PreAuthorize
-
+import groovy.json.JsonBuilder
+import groovy.json.JsonOutput
 import java.text.SimpleDateFormat
+import java.util.Date
 
 import org.celllife.stock.framework.restclient.RESTClient 
 
@@ -24,14 +33,12 @@ class SummaryController {
     @Autowired
     RESTClient client;
 
-  
-    @RequestMapping(value="/table", method = RequestMethod.GET)
-    def getTable(Model model) {
 
-        //def  = client.get("${externalBaseUrl}/")
-        //model.put("map", ,map)
-        return "table";
+    @RequestMapping(value="/table", method = RequestMethod.GET)
+	def getMap(Model model) {
+
+		return "table";
+  
 
     }
-
 }
