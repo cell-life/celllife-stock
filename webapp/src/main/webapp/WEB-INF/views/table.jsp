@@ -43,7 +43,7 @@
                     <td>${stockList.clinicName}</td>
                     <td>${stockList.drugName}</td>
                     <jsp:setProperty name="dateValue" property="time" value="${stockList.date}" />
-                    <td><fmt:formatDate type="both" dateStyle="medium" timeStyle="medium" value="${dateValue}" /></td>
+                    <td><fmt:formatDate type="date" dateStyle="medium" value="${dateValue}" /></td>
                     <td><fmt:formatNumber value="${stockList.quantity}" type="number" minFractionDigits="2"/></td>
                 </tr>
             </c:forEach>
