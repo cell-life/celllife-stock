@@ -30,20 +30,11 @@
 
     <hr>
 
+    <div class="row ohsc-border">
+
+        
     <h4><u>View stock levels</u></h4>
-         <div class="form-group">
-          <table>
-				<tr>
-				    <td>Date</td>
-				    <td>Msisdn</td>
-				</tr>
-				<tr>
-				    <td><input name="date" type="text" placeholder="Date" autofocus required style="width: 250px"></td>
-				    <td><input name="msisdn" type="text" placeholder="msisdn" required style="width: 250px"></td>
-				</tr> 
-		 </table> 
-        </div>
-        <div>
+    
         <table class="table table-striped table-bordered" id="myTable">
             <thead>
             <tr>
@@ -55,21 +46,28 @@
             </tr>
             </thead>
             <tbody>
-            
-            
+            <c:forEach items="${stockList}" var="stockList">
+                <tr>               
+                    <td><fmt:formatNumber value="${stockList.clinicCode}" type="number" minFractionDigits="2"/></td>
+                    <td><fmt:formatNumber value="${stockList.clinicName}" type="number" minFractionDigits="2"/></td>
+                    <td><fmt:formatNumber value="${stockList.drugName}" type="number" minFractionDigits="2"/></td>
+                    <td><fmt:formatNumber value="${stockList.date}" type="number" minFractionDigits="2"/></td>
+                    <td><fmt:formatNumber value="${stockList.quantity}" type="number" minFractionDigits="2"/></td>
+                </tr>
+            </c:forEach>
             </tbody>
         </table>
-        </div>
-        <button class="btn btn-default" type="submit">View</button>
 
-    <hr>
+
+        <p><small>All facilities stock list.</small></p>
+    </div>
 
     <div class="footer">
         <p>&copy; Cell-Life (NPO) - 2013</p>
     </div>
 
 </div>
-
+</div>
 
 </body>
 </html>

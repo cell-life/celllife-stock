@@ -23,23 +23,38 @@ import java.util.Date
 import org.celllife.stock.framework.restclient.RESTClient 
 
 @Controller
-class IndexController {
+class AddAlertController {
 
     @Value('${external.base.url}')
     def String externalBaseUrl
     
     @Autowired
     RESTClient client;
-	
-	@RequestMapping(value="/", method = RequestMethod.GET)
-    def root(Model model) {
-        return index(model);
-    }
-	
-	@RequestMapping(value="index", method = RequestMethod.GET)
-	def index(Model model) {
-    return new ModelAndView("index", model);
+
+	@RequestMapping(value="alert", method = RequestMethod.GET)
+	def alert(Model model) {
+	return new ModelAndView("alert", model);
 		 
 	}
+	
+	
+    @RequestMapping(value="/alert/createAlerts", method = RequestMethod.POST)
+    def createAlerts(@RequestParam("level") String level, @RequestParam("message") String message,  @RequestParam("user") String user,@RequestParam("bar_code") String bar_code,
+            Model model, Principal principal, HttpServletRequest request, HttpServletResponse response) {
+            def date = new Date()
+            def sdf = new SimpleDateFormat("yyyy-MM-dd") 
+            def today = sdf.format(date)
+			//def testUrl = "http://sol.cell-life.org/stock"
+			System.out.println(bar_code);
+		    def alert = "{date: " + today + ", level: " + level + " , message: " + message +" , user: {msisdn: "+ user +" },drug: {barcode: "+bar_code+ "}"
+			System.out.println(alert);
+			def httpResponseDecorator = client.postJson(externalBaseUrl+"/service/alerts", alert)
+			client.postJson(externalBaseUrl+"/service/alerts", alert)
+		
+    return "alert"
+
+ }
+    
+      
 
 }
