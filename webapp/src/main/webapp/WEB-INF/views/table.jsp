@@ -13,7 +13,8 @@
     <base href="${fn:substring(url, 0, fn:length(url) - fn:length(pageContext.request.requestURI))}${pageContext.request.contextPath}/" />
 
     <link href="resources/css/bootstrap-3.0.2.css" rel="stylesheet" media="screen">
-    <link href="resources/css/bootstrap-theme-3.0.2.css" rel="stylesheet">
+    <link href="resources/css/bootstrap-theme-3.0.2.css" rel="stylesheet" media="screen">
+    <link href="resources/css/application.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -29,9 +30,37 @@
 
     <hr>
 
-    <h4><u>Summary</u></h4>
-    
-	</div>
+    <h4><u>View stock levels</u></h4>
+         <div class="form-group">
+          <table>
+				<tr>
+				    <td>Date</td>
+				    <td>Msisdn</td>
+				</tr>
+				<tr>
+				    <td><input name="date" type="text" placeholder="Date" autofocus required style="width: 250px"></td>
+				    <td><input name="msisdn" type="text" placeholder="msisdn" required style="width: 250px"></td>
+				</tr> 
+		 </table> 
+        </div>
+        <div>
+        <table class="table table-striped table-bordered" id="myTable">
+            <thead>
+            <tr>
+                <th>Facility code</th>
+                <th>Facility name</th>
+                <th>Drug name</th>
+                <th>Date</th>
+                <th>Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            
+            
+            </tbody>
+        </table>
+        </div>
+        <button class="btn btn-default" type="submit">View</button>
 
     <hr>
 
@@ -40,6 +69,7 @@
     </div>
 
 </div>
+
 
 </body>
 </html>

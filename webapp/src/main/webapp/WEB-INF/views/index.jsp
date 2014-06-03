@@ -25,7 +25,7 @@
     
 </head>
 <body>
- <form action='/' id='form1' method='POST'> 
+ <form action='index' id='form1' method='POST'> 
 <div class="container">
 
     <div class="masthead">

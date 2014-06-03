@@ -2,7 +2,7 @@ package org.celllife.stock.framework.restclient
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-
+import groovyx.net.http.ContentType
 /**
  * Client that invokes a REST service and returns a map of the data result
  */
