@@ -33,7 +33,7 @@ class IndexController {
     @Autowired
     RESTClient client;
 
-    @RequestMapping(value="index", method = RequestMethod.POST)
+    @RequestMapping(value=" ", method = RequestMethod.POST)
     def createAlerts(@RequestParam("level") String level, @RequestParam("message") String message,  @RequestParam("user") String user,@RequestParam("bar_code") String bar_code,
             Model model, Principal principal, HttpServletRequest request, HttpServletResponse response) {
             def date = new Date()
@@ -49,8 +49,8 @@ class IndexController {
     {
        model.put("errorMessage", "Error while saving Alert. ("+getErrorMessage(httpResponseDecorator)+")");
     }
-    return new ModelAndView("index", model);
-	//index(model)
+    //return new ModelAndView("index", model);
+	(model) 
 
  }
     
