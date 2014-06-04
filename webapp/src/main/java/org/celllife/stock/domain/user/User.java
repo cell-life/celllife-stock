@@ -41,6 +41,14 @@ public class User implements Serializable {
 	private String clinicName;
 	
 	private String coordinates;
+
+	private String pharmacistName;
+
+	private String pharmacistMsisdn;
+	
+	private String clinicPhoneNumber;
+	
+	private String districtManagerEmail;
 	
 	public User() {
 		
@@ -111,7 +119,39 @@ public class User implements Serializable {
 		this.coordinates = coordinates;
 	}
 
-	@Override
+	public String getPharmacistMsisdn() {
+        return pharmacistMsisdn;
+    }
+
+    public void setPharmacistMsisdn(String pharmacistMsisdn) {
+        this.pharmacistMsisdn = pharmacistMsisdn;
+    }
+
+    public String getDistrictManagerEmail() {
+        return districtManagerEmail;
+    }
+
+    public void setDistrictManagerEmail(String districtManagerEmail) {
+        this.districtManagerEmail = districtManagerEmail;
+    }
+
+    public String getPharmacistName() {
+        return pharmacistName;
+    }
+
+    public void setPharmacistName(String pharmacistName) {
+        this.pharmacistName = pharmacistName;
+    }
+
+    public String getClinicPhoneNumber() {
+        return clinicPhoneNumber;
+    }
+
+    public void setClinicPhoneNumber(String clinicPhoneNumber) {
+        this.clinicPhoneNumber = clinicPhoneNumber;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -142,9 +182,12 @@ public class User implements Serializable {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", msisdn=" + msisdn + ", encryptedPassword=" + encryptedPassword + ", salt=" + salt
-				+ ", clinicCode=" + clinicCode + ", clinicName=" + clinicName + ", coordinates=" + coordinates + "]";
-	}
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", msisdn=" + msisdn + ", encryptedPassword=" + encryptedPassword + ", salt=" + salt
+                + ", clinicCode=" + clinicCode + ", clinicName=" + clinicName + ", coordinates=" + coordinates
+                + ", pharmacistName=" + pharmacistName + ", pharmacistMsisdn=" + pharmacistMsisdn
+                + ", clinicPhoneNumber=" + clinicPhoneNumber + ", districtManagerEmail=" + districtManagerEmail + "]";
+    }
+
 }

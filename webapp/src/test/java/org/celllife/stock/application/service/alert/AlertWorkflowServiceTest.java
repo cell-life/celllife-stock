@@ -130,6 +130,26 @@ public class AlertWorkflowServiceTest {
 			}
 			Assert.assertEquals(3, counter);
 			
+			for (Notification n : notifications) {
+			    if (n.getAlert().equals(alert3)) {
+			        // sms
+			        Assert.assertEquals("SMS is being sent to pharmacist", "27768198075", n.getRecipient());
+			        String message = n.getMessage();
+			        Assert.assertTrue("Message contains drug name", message.contains(drug2.getName()));
+			        Assert.assertTrue("Message contains clinic name", message.contains("Demo Clinic 1"));
+			    }
+			    if (n.getAlert().equals(alert4)) {
+			        // email
+			        Assert.assertEquals("SMS is being sent to district manager", "dagmar@cell-life.org", n.getRecipient());
+			        String message = n.getMessage();
+			        Assert.assertTrue("Message contains clinic phone number", message.contains("021 462 6481"));
+	                Assert.assertTrue("Message contains clinic name", message.contains("Demo Clinic 1"));
+	                Assert.assertTrue("Message contains drug name", message.contains(drug3.getName()));
+	                Assert.assertTrue("Message contains pharmacist name", message.contains("Dagmar Timler"));
+	                Assert.assertTrue("Message contains pharmacist msisdn", message.contains("27768198075"));
+			    }
+			}
+			
 			Assert.assertTrue(drugs.contains(drug1));
 			Assert.assertTrue(drugs.contains(drug4));
 			Assert.assertTrue(drugs.contains(drug2));
@@ -164,6 +184,10 @@ public class AlertWorkflowServiceTest {
 	
 	private User createAndSaveUser(String msisdn) {
 		User user = new User(msisdn, "jsdfklllllll", "ssss", "0000", "Demo Clinic 1");
+		user.setClinicPhoneNumber("021 462 6481");
+		user.setDistrictManagerEmail("dagmar@cell-life.org");
+		user.setPharmacistName("Dagmar Timler");
+		user.setPharmacistMsisdn("27768198075");
     	return userRepository.save(user);
 	}
 	

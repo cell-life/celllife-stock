@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 			throw new StockException("User with msisdn '"+user.getMsisdn()+"' already exists.");
 		}
 		
-		User newUser = convertUser(user);
+		User newUser = user.toUser();
 
 		// set the user's encrypted password
 		try {
@@ -55,12 +55,5 @@ public class UserServiceImpl implements UserService {
 		} else {
 			return null;
 		}
-	}
-
-	private User convertUser(UserDto user) {
-		User newUser = new User(user.getMsisdn(), user.getEncryptedPassword(), user.getSalt(), 
-				user.getClinicCode(), user.getClinicName());
-		newUser.setCoordinates(user.getCoordinates());
-		return newUser;
 	}
 }

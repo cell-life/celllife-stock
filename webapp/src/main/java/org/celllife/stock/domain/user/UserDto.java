@@ -21,6 +21,14 @@ public class UserDto implements Serializable {
 	private String clinicName;
 	
 	private String coordinates;
+
+	private String clinicPhoneNumber;
+   
+	private String pharmacistName;
+
+    private String pharmacistMsisdn;
+
+    private String districtManagerEmail;
 	
 	public UserDto() {
 		
@@ -34,6 +42,11 @@ public class UserDto implements Serializable {
 		this.salt = user.getSalt();
 		this.clinicCode = user.getClinicCode();
 		this.clinicName = user.getClinicName();
+		this.coordinates = user.getCoordinates();
+		this.pharmacistName = user.getPharmacistName();
+		this.clinicPhoneNumber = user.getClinicPhoneNumber();
+		this.pharmacistMsisdn = user.getPharmacistMsisdn();
+		this.districtManagerEmail = user.getDistrictManagerEmail();
 	}
 
 	public UserDto(String msisdn, String password, String clinicCode, String clinicName) {
@@ -43,6 +56,16 @@ public class UserDto implements Serializable {
 		this.clinicCode = clinicCode;
 		this.clinicName = clinicName;
 	}
+
+    public User toUser() {
+        User newUser = new User(getMsisdn(), getEncryptedPassword(), getSalt(), getClinicCode(), getClinicName());
+        newUser.setPharmacistName(getPharmacistName());
+        newUser.setPharmacistMsisdn(getPharmacistMsisdn());
+        newUser.setDistrictManagerEmail(getDistrictManagerEmail());
+        newUser.setClinicPhoneNumber(getClinicPhoneNumber());
+        newUser.setCoordinates(getCoordinates());
+        return newUser;
+    }
 
 	public Long getId() {
 		return id;
@@ -108,7 +131,39 @@ public class UserDto implements Serializable {
 		this.coordinates = coordinates;
 	}
 
-	@Override
+	public String getPharmacistMsisdn() {
+        return pharmacistMsisdn;
+    }
+
+    public void setPharmacistMsisdn(String pharmacistMsisdn) {
+        this.pharmacistMsisdn = pharmacistMsisdn;
+    }
+
+    public String getDistrictManagerEmail() {
+        return districtManagerEmail;
+    }
+
+    public void setDistrictManagerEmail(String districtManagerEmail) {
+        this.districtManagerEmail = districtManagerEmail;
+    }
+
+    public String getClinicPhoneNumber() {
+        return clinicPhoneNumber;
+    }
+
+    public void setClinicPhoneNumber(String clinicPhoneNumber) {
+        this.clinicPhoneNumber = clinicPhoneNumber;
+    }
+
+    public String getPharmacistName() {
+        return pharmacistName;
+    }
+
+    public void setPharmacistName(String pharmacistName) {
+        this.pharmacistName = pharmacistName;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -139,10 +194,13 @@ public class UserDto implements Serializable {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "UserDto [id=" + id + ", msisdn=" + msisdn + ", encryptedPassword=" + encryptedPassword + ", password="
-				+ password + ", salt=" + salt + ", clinicCode=" + clinicCode + ", clinicName=" + clinicName
-				+ ", coordinates=" + coordinates + "]";
-	}
+    @Override
+    public String toString() {
+        return "UserDto [id=" + id + ", msisdn=" + msisdn + ", encryptedPassword=" + encryptedPassword + ", password="
+                + password + ", salt=" + salt + ", clinicCode=" + clinicCode + ", clinicName=" + clinicName
+                + ", coordinates=" + coordinates + ", clinicPhoneNumber=" + clinicPhoneNumber + ", pharmacistName="
+                + pharmacistName + ", pharmacistMsisdn=" + pharmacistMsisdn + ", districtManagerEmail="
+                + districtManagerEmail + "]";
+    }
+
 }

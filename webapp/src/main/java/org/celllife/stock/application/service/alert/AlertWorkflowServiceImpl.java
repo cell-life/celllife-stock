@@ -50,18 +50,6 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 	
 	@Value("${mailSender.from}")
 	String mailFromAddress;
-	
-	@Value("${tmp.contact.pharmacist.msisdn}")
-	String pharmacistMsisdn;
-
-	@Value("${tmp.contact.pharmacist.name}")
-	String pharmacistName;
-	
-	@Value("${tmp.contact.clinic.phoneNumber}")
-	String clinicPhoneNumber;
-
-	@Value("${tmp.contact.districtManager.email}")
-	String districtManagerEmail;
 
 	@Override
 	public Alert updateAlert(Alert alert) {
@@ -84,11 +72,11 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 		case 2:
 			// SMS to pharmacy manager
 			String smsText2 = getPharmacistSmsText(alert);
-			sendSms(pharmacistMsisdn, smsText2, alert);
+			sendSms(alert.getUser().getPharmacistMsisdn(), smsText2, alert);
 			break;
 		case 3:
 			// email to district manager
-			sendEmail(districtManagerEmail, alert);
+			sendEmail(alert.getUser().getDistrictManagerEmail(), alert);
 			break;
 		}
 	}
@@ -132,8 +120,9 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 	}
 
 	String getEmailText(Alert alert) {
-		String[] args = new String[] { alert.getUser().getClinicName(), alert.getDrug().getName(), 
-				pharmacistName, pharmacistMsisdn, clinicPhoneNumber };
+	    User user = alert.getUser();
+		String[] args = new String[] { user.getClinicName(), alert.getDrug().getName(), 
+				user.getPharmacistName(), user.getPharmacistMsisdn(), user.getClinicPhoneNumber() };
 		String emailText = messageSource.getMessage("districtManager.emailContent", args, null, null);
 		log.debug("EmailText="+emailText);
 		return emailText;
