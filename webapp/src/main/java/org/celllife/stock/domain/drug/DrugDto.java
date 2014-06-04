@@ -21,6 +21,7 @@ public class DrugDto implements Serializable {
 	public DrugDto(Drug drug) {
 		super();
 		this.id = drug.getId();
+		this.name = drug.getName();
 		this.barcode = drug.getBarcode();
 		this.description = drug.getDescription();
 	}
@@ -36,6 +37,15 @@ public class DrugDto implements Serializable {
 		this.barcode = barcode;
 		this.name = name;
 		this.description = description;
+	}
+
+	public Drug toDrug() {
+	    Drug drug = new Drug();
+	    drug.setId(id);
+	    drug.setName(name);
+	    drug.setDescription(description);
+	    drug.setBarcode(barcode);
+	    return drug;
 	}
 
 	public Long getId() {

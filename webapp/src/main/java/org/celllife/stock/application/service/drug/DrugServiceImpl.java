@@ -21,7 +21,7 @@ public class DrugServiceImpl implements DrugService {
 		if (existingDrug != null) {
 			throw new StockException("Drug with barcode '"+drug.getBarcode()+"' already exists.");
 		}
-		Drug newDrug = convertDrug(drug);
+		Drug newDrug = drug.toDrug();
 		Drug savedDrug = drugRepository.save(newDrug);
 		return new DrugDto(savedDrug);
 	}
@@ -34,10 +34,5 @@ public class DrugServiceImpl implements DrugService {
 			return null;
 		}
 		return new DrugDto(drug);
-	}
-
-	private Drug convertDrug(DrugDto drug) {
-		Drug newDrug = new Drug(drug.getBarcode(), drug.getName(), drug.getDescription());
-		return newDrug;
 	}
 }
