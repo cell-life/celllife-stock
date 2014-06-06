@@ -9,6 +9,8 @@ import org.celllife.stock.application.service.alert.AlertService;
 import org.celllife.stock.domain.alert.AlertDto;
 import org.celllife.stock.domain.alert.AlertSummaryDto;
 import org.celllife.stock.domain.exception.StockException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/service/alerts")
 public class AlertController {
+    
+    private static Logger log = LoggerFactory.getLogger(AlertController.class);
 
 	@Autowired
 	AlertService alertService;
@@ -54,6 +58,7 @@ public class AlertController {
 	        	return alert;
 	        }
 		} catch (StockException e) {
+		    log.error("Error while getting alert with id "+alertId, e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return null;
 		}
@@ -66,6 +71,7 @@ public class AlertController {
 			response.setHeader("Location", baseUrl+"/service/alerts/"+newAlert.getId());
 	        response.setStatus(HttpServletResponse.SC_CREATED);
 		} catch (StockException e) {
+		    log.error("Error while saving alert "+alert, e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}

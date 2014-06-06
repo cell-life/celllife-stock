@@ -6,12 +6,12 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import org.celllife.stock.application.service.stock.StockService;
-import org.celllife.stock.domain.alert.AlertSummaryDto;
 import org.celllife.stock.domain.exception.StockException;
 import org.celllife.stock.domain.stock.StockDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/service/stocks")
 public class StockController {
+    
+    private static Logger log = LoggerFactory.getLogger(StockController.class);
 
 	@Autowired
 	StockService stockService;
@@ -42,6 +44,7 @@ public class StockController {
 	        	return stock;
 	        }
 		} catch (StockException e) {
+		    log.error("Error while getting stock with id "+stockId, e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return null;
 		}
@@ -66,6 +69,7 @@ public class StockController {
 			response.setHeader("Location", baseUrl+"/service/stocks/"+newStock.getId());
 	        response.setStatus(HttpServletResponse.SC_CREATED);
 		} catch (StockException e) {
+		    log.error("Error while saving stock take "+stock, e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
@@ -77,6 +81,7 @@ public class StockController {
 			response.setHeader("Location", baseUrl+"/service/stocks/"+newStock.getId());
 	        response.setStatus(HttpServletResponse.SC_CREATED);
 		} catch (StockException e) {
+		    log.error("Error while saving stock arrival "+stock, e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}

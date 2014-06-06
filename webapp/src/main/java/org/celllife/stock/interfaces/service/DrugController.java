@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.celllife.stock.application.service.drug.DrugService;
 import org.celllife.stock.domain.drug.DrugDto;
 import org.celllife.stock.domain.exception.StockException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/service/drugs")
 public class DrugController {
+    
+    private static Logger log = LoggerFactory.getLogger(DrugController.class);
 
 	@Autowired
 	DrugService drugService;
@@ -39,6 +43,7 @@ public class DrugController {
 	        	return drug;
 	        }
 		} catch (StockException e) {
+		    log.error("Error while getting drug with barcode "+barcode, e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return null;
 		}
@@ -51,6 +56,7 @@ public class DrugController {
 			response.setHeader("Location", baseUrl+"/service/drugs?barcode="+newDrug.getBarcode());
 	        response.setStatus(HttpServletResponse.SC_CREATED);
 		} catch (StockException e) {
+		    log.error("Error while saving drug "+drug, e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}

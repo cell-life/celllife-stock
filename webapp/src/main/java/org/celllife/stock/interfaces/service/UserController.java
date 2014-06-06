@@ -42,6 +42,7 @@ public class UserController {
 			}
 			return user;
 		} catch (StockException e) {
+		    log.error("Error while getting user with msisdn "+msisdn, e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 			return null;
 		}
@@ -55,6 +56,7 @@ public class UserController {
 			response.setHeader("Location", baseUrl + "/service/users?msisdn=" + newUser.getMsisdn());
 			response.setStatus(HttpServletResponse.SC_CREATED);
 		} catch (StockException e) {
+		    log.error("Error while saving user "+user, e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
