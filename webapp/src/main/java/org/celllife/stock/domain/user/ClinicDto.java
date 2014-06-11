@@ -97,10 +97,6 @@ public class ClinicDto implements Serializable {
         return activated;
     }
 
-    public Boolean isActivated() {
-        return activated;
-    }
-
     public void setActivated(Boolean activated) {
         this.activated = activated;
     }
