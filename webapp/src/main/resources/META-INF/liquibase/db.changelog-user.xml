@@ -69,5 +69,32 @@
             <column name="clinic_phone_number" type="VARCHAR(255)" />
         </addColumn>
     </changeSet>
+
+    <changeSet author="dagmar.timler" id="user-7">
+ 		<preConditions onFail="MARK_RAN">
+ 		    <not><columnExists tableName="user" columnName="lead_time" /></not>
+ 		</preConditions>
+        <addColumn tableName="user">
+            <column name="lead_time" type="INT" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="dagmar.timler" id="user-8">
+ 		<preConditions onFail="MARK_RAN">
+ 		    <not><columnExists tableName="user" columnName="safety_level" /></not>
+ 		</preConditions>
+        <addColumn tableName="user">
+            <column name="safety_level" type="INT" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="dagmar.timler" id="user-9">
+ 		<preConditions onFail="MARK_RAN">
+ 		    <not><columnExists tableName="user" columnName="activated" /></not>
+ 		</preConditions>
+        <addColumn tableName="user">
+            <column name="activated" type="BOOLEAN" />
+        </addColumn>
+    </changeSet>
     
 </databaseChangeLog>

@@ -3,6 +3,7 @@ package org.celllife.stock.domain.user;
 import java.io.Serializable;
 
 import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -49,6 +50,13 @@ public class User implements Serializable {
 	private String clinicPhoneNumber;
 	
 	private String districtManagerEmail;
+
+	private Integer safetyLevel;
+	
+	private Integer leadTime;
+	
+	@Column(columnDefinition = "BIT", length = 1)
+	private Boolean activated;
 	
 	public User() {
 		
@@ -151,6 +159,34 @@ public class User implements Serializable {
         this.clinicPhoneNumber = clinicPhoneNumber;
     }
 
+    public Integer getSafetyLevel() {
+        return safetyLevel;
+    }
+
+    public void setSafetyLevel(Integer safetyLevel) {
+        this.safetyLevel = safetyLevel;
+    }
+
+    public Integer getLeadTime() {
+        return leadTime;
+    }
+
+    public void setLeadTime(Integer leadTime) {
+        this.leadTime = leadTime;
+    }
+
+    public Boolean getActivated() {
+        return activated;
+    }
+
+    public Boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
+    }
+
     @Override
 	public int hashCode() {
 		final int prime = 31;
@@ -187,7 +223,7 @@ public class User implements Serializable {
         return "User [id=" + id + ", msisdn=" + msisdn + ", encryptedPassword=" + encryptedPassword + ", salt=" + salt
                 + ", clinicCode=" + clinicCode + ", clinicName=" + clinicName + ", coordinates=" + coordinates
                 + ", pharmacistName=" + pharmacistName + ", pharmacistMsisdn=" + pharmacistMsisdn
-                + ", clinicPhoneNumber=" + clinicPhoneNumber + ", districtManagerEmail=" + districtManagerEmail + "]";
+                + ", clinicPhoneNumber=" + clinicPhoneNumber + ", districtManagerEmail=" + districtManagerEmail
+                + ", safetyLevel=" + safetyLevel + ", leadTime=" + leadTime + ", activated=" + activated + "]";
     }
-
 }

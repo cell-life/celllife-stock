@@ -41,6 +41,8 @@ public class DrugStockWarehouseServiceTest {
 	@Ignore("integration test")
 	public void testActivation() throws Exception {
 		User user = new User();
+		user.setLeadTime(14);
+		user.setSafetyLevel(3);
 		user.setClinicCode("0000");
 		List<Stock> stock = new ArrayList<Stock>();
 		Drug grandpa = new Drug("60015204", "Grandpa 24 tablets");

@@ -85,8 +85,8 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 		String url = URL_ACTIVATION.replace("{id}", user.getClinicCode());
 		// create the request
 		Map<String, Object> activationMap = new HashMap<String, Object>();
-		// FIXME: need to implement device setup and get this information from the phone
-		activationMap.put("leadTime", 5);
+        activationMap.put("leadTime", user.getLeadTime());
+        // FIXME: need to send safetyLevel too....
 		List<Map<String, Object>> stockMap = new ArrayList<Map<String, Object>>();
 		for (Stock s : stock) {
 			stockMap.add(convertStock(s));

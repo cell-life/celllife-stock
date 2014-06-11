@@ -4,6 +4,7 @@ package org.celllife.stock.application.service.user;
 import junit.framework.Assert;
 
 import org.celllife.stock.domain.exception.StockException;
+import org.celllife.stock.domain.user.ClinicDto;
 import org.celllife.stock.domain.user.User;
 import org.celllife.stock.domain.user.UserDto;
 import org.celllife.stock.domain.user.UserRepository;
@@ -55,6 +56,36 @@ public class UserServiceTest {
 			if (userId != null) userRepository.delete(userId);
 		}
 	}
+
+	@Test(expected = StockException.class)
+	public void testActivateClinicWithNoUser() throws Exception {
+	    ClinicDto clinic = new ClinicDto("7342878239473294", "0000", "Demo Clinic 1", "[123,123]");
+	    userService.activateClinic(clinic);
+	}
+
+	@Test
+    public void testActivateClinic() throws Exception {
+	    String msisdn = "0118198075";
+        Long userId = null;
+        try {
+            UserDto user = new UserDto(msisdn, "1234", "0000", "Demo Clinic 1");
+            UserDto savedUser = userService.createUser(user);
+            userId = savedUser.getId();
+
+            ClinicDto clinic = new ClinicDto(msisdn);
+            clinic.setLeadTime(14);
+            clinic.setSafetyLevel(3);
+            userService.activateClinic(clinic);
+
+            UserDto user2 = userService.getUser(msisdn);
+            Assert.assertEquals(new Integer(14), user2.getLeadTime());
+            Assert.assertEquals(new Integer(3), user2.getSafetyLevel());
+            Assert.assertFalse(user2.isActivated());
+            
+        } finally {
+            if (userId != null) userRepository.delete(userId);
+        }
+    }
 
     @Test
     public void testToDTOAndBack() throws Exception {

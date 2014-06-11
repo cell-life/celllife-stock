@@ -13,6 +13,12 @@ public class ClinicDto implements Serializable {
 	private String clinicName;
 
 	private String coordinates;
+
+    private Integer safetyLevel;
+    
+    private Integer leadTime;
+    
+    private Boolean activated;
 	
 	public ClinicDto() {
 		
@@ -25,6 +31,11 @@ public class ClinicDto implements Serializable {
 		this.clinicName = user.getClinicName();
 		this.coordinates = user.getCoordinates();
 	}
+
+   public ClinicDto(String msisdn) {
+        super();
+        this.msisdn = msisdn;
+    }
 
 	public ClinicDto(String msisdn, String clinicCode, String clinicName, String coordinates) {
 		super();
@@ -66,7 +77,35 @@ public class ClinicDto implements Serializable {
 		this.coordinates = coordinates;
 	}
 
-	@Override
+	public Integer getSafetyLevel() {
+        return safetyLevel;
+    }
+
+    public void setSafetyLevel(Integer safetyLevel) {
+        this.safetyLevel = safetyLevel;
+    }
+
+    public Integer getLeadTime() {
+        return leadTime;
+    }
+
+    public void setLeadTime(Integer leadTime) {
+        this.leadTime = leadTime;
+    }
+
+    public Boolean getActivated() {
+        return activated;
+    }
+
+    public Boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -97,10 +136,11 @@ public class ClinicDto implements Serializable {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "ClinicDto [msisdn=" + msisdn + ", clinicCode=" + clinicCode + ", clinicName=" + clinicName
-				+ ", coordinates=" + coordinates + "]";
-	}
+    @Override
+    public String toString() {
+        return "ClinicDto [msisdn=" + msisdn + ", clinicCode=" + clinicCode + ", clinicName=" + clinicName
+                + ", coordinates=" + coordinates + ", safetyLevel=" + safetyLevel + ", leadTime=" + leadTime
+                + ", activated=" + activated + "]";
+    }
 
 }

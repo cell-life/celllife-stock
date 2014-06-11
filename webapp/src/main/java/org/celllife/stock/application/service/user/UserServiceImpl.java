@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 import org.celllife.stock.domain.exception.StockException;
+import org.celllife.stock.domain.user.ClinicDto;
 import org.celllife.stock.domain.user.User;
 import org.celllife.stock.domain.user.UserDto;
 import org.celllife.stock.domain.user.UserRepository;
@@ -56,4 +57,18 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 	}
+
+    @Override
+    public void activateClinic(ClinicDto clinic) {
+        User user = userRepository.findOneByMsisdn(clinic.getMsisdn());
+        if (user == null) {
+            throw new StockException("User with msisdn '"+clinic.getMsisdn()+"' does not exist. Please create the user before trying to activate the clinic.");
+        }
+        user.setLeadTime(clinic.getLeadTime());
+        user.setSafetyLevel(clinic.getSafetyLevel());
+        user.setActivated(Boolean.FALSE);
+        
+        User savedUser = userRepository.save(user);
+        log.info("activated clinic "+savedUser);
+    }
 }

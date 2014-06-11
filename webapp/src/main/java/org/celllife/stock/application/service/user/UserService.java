@@ -1,5 +1,6 @@
 package org.celllife.stock.application.service.user;
 
+import org.celllife.stock.domain.user.ClinicDto;
 import org.celllife.stock.domain.user.UserDto;
 
 public interface UserService {
@@ -18,4 +19,10 @@ public interface UserService {
 	 * @return User, null if none found
 	 */
 	UserDto getUser(String msisdn);
+
+	/**
+	 * Activates the clinic and sets the leadTime and the safetyLevel
+	 * @param clinic ClinicDto containing the values entered during the phone setup
+	 */
+	void activateClinic(ClinicDto clinic);
 }

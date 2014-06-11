@@ -29,6 +29,12 @@ public class UserDto implements Serializable {
     private String pharmacistMsisdn;
 
     private String districtManagerEmail;
+
+    private Integer safetyLevel;
+    
+    private Integer leadTime;
+    
+    private Boolean activated;
 	
 	public UserDto() {
 		
@@ -47,6 +53,9 @@ public class UserDto implements Serializable {
 		this.clinicPhoneNumber = user.getClinicPhoneNumber();
 		this.pharmacistMsisdn = user.getPharmacistMsisdn();
 		this.districtManagerEmail = user.getDistrictManagerEmail();
+		this.safetyLevel = user.getSafetyLevel();
+		this.leadTime = user.getLeadTime();
+		this.activated = user.isActivated();
 	}
 
 	public UserDto(String msisdn, String password, String clinicCode, String clinicName) {
@@ -64,6 +73,9 @@ public class UserDto implements Serializable {
         newUser.setDistrictManagerEmail(getDistrictManagerEmail());
         newUser.setClinicPhoneNumber(getClinicPhoneNumber());
         newUser.setCoordinates(getCoordinates());
+        newUser.setLeadTime(getLeadTime());
+        newUser.setSafetyLevel(getSafetyLevel());
+        newUser.setActivated(isActivated());
         return newUser;
     }
 
@@ -163,6 +175,34 @@ public class UserDto implements Serializable {
         this.pharmacistName = pharmacistName;
     }
 
+    public Integer getSafetyLevel() {
+        return safetyLevel;
+    }
+
+    public void setSafetyLevel(Integer safetyLevel) {
+        this.safetyLevel = safetyLevel;
+    }
+
+    public Integer getLeadTime() {
+        return leadTime;
+    }
+
+    public void setLeadTime(Integer leadTime) {
+        this.leadTime = leadTime;
+    }
+
+    public Boolean getActivated() {
+        return activated;
+    }
+
+    public Boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(Boolean activated) {
+        this.activated = activated;
+    }
+
     @Override
 	public int hashCode() {
 		final int prime = 31;
@@ -200,7 +240,8 @@ public class UserDto implements Serializable {
                 + password + ", salt=" + salt + ", clinicCode=" + clinicCode + ", clinicName=" + clinicName
                 + ", coordinates=" + coordinates + ", clinicPhoneNumber=" + clinicPhoneNumber + ", pharmacistName="
                 + pharmacistName + ", pharmacistMsisdn=" + pharmacistMsisdn + ", districtManagerEmail="
-                + districtManagerEmail + "]";
+                + districtManagerEmail + ", safetyLevel=" + safetyLevel + ", leadTime=" + leadTime + ", activated="
+                + activated + "]";
     }
 
 }
