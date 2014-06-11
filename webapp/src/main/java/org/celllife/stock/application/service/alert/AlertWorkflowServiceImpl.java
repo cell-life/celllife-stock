@@ -82,19 +82,23 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 	}
 	
 	void sendSms(String msisdn, String smsText, Alert alert) {
-		ContactDto contact = new ContactDto();
-		contact.setMsisdn(msisdn);
-		List<ContactDto> contacts = new ArrayList<ContactDto>();
-		contacts.add(contact);
-		String campaignName = "StockApp notification "+new Date()+"-"+msisdn;
-		String campaignDescription = "StockApp notification JustSendSMS to "+msisdn;
-		try {
-			communicateClient.getCampaignService().createNewCampaign(campaignName, campaignDescription, smsText, contacts);
-		} catch (RestCommandException e) {
-			log.error("Could not send a notification SMS '"+smsText+"' to '"+msisdn+"'.",e);
-		}
-		log.debug("Should have sent notification SMS '"+smsText+"' to msisdn '"+msisdn+"'. "+alert);
-		saveNotification(smsText, msisdn, alert);
+	    if (msisdn == null || msisdn.trim().isEmpty()) {
+	        log.warn("Could not send notification SMS because the msisdn is invalid. "+alert);
+	    } else {
+    		ContactDto contact = new ContactDto();
+    		contact.setMsisdn(msisdn);
+    		List<ContactDto> contacts = new ArrayList<ContactDto>();
+    		contacts.add(contact);
+    		String campaignName = "StockApp notification "+new Date()+"-"+msisdn;
+    		String campaignDescription = "StockApp notification JustSendSMS to "+msisdn;
+    		try {
+    			communicateClient.getCampaignService().createNewCampaign(campaignName, campaignDescription, smsText, contacts);
+    		} catch (RestCommandException e) {
+    			log.error("Could not send a notification SMS '"+smsText+"' to '"+msisdn+"'.",e);
+    		}
+    		log.debug("Should have sent notification SMS '"+smsText+"' to msisdn '"+msisdn+"'. "+alert);
+    		saveNotification(smsText, msisdn, alert);
+	    }
 	}
 
 	String getAppSmsText(Alert alert) {
@@ -112,11 +116,15 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 	}
 	
 	private void sendEmail(String emailAddress, Alert alert) {
-		String subject = getEmailSubject(alert);
-		String text = getEmailText(alert);
-		mailService.sendEmail(emailAddress, mailFromAddress, subject, text);
-		log.debug("Should have sent email '"+text+"' to '"+emailAddress+"'. "+alert);
-		saveNotification(text, emailAddress, alert);
+	    if (emailAddress == null || emailAddress.trim().isEmpty()) {
+	        log.warn("Could not send email because the emailAddress is invalid"+alert);
+	    } else {
+    		String subject = getEmailSubject(alert);
+    		String text = getEmailText(alert);
+    		mailService.sendEmail(emailAddress, mailFromAddress, subject, text);
+    		log.debug("Should have sent email '"+text+"' to '"+emailAddress+"'. "+alert);
+    		saveNotification(text, emailAddress, alert);
+	    }
 	}
 
 	String getEmailText(Alert alert) {
