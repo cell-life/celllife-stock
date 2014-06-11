@@ -22,7 +22,6 @@ public enum AlertWorkflow {
 				// send out alert notification
 				alertWorkflowService.sendCommunication(newAlert);
 			} else if (isGreaterThanOneDay(alert) && alert.getLevel() == 1) {
-				System.out.println("here");
 				// send out extra communication
 				alertWorkflowService.sendCommunication(alert);
 			}
