@@ -62,10 +62,22 @@ public class FacilityReportServiceImpl implements FacilityReportService {
 			for (Date d : stockByDate.keySet()) {
 				List<Stock> stockForDate = stockByDate.get(d);
 				boolean success = false;
-				if (type == StockType.ORDER) {
-					success = dswService.sendStockTakes(u, stockForDate);
+				if (u.isActivated()) {
+    				if (type == StockType.ORDER) {
+    					success = dswService.sendStockTakes(u, stockForDate);
+    				} else {
+    					success = dswService.sendStockReceived(u, stockForDate);
+    				}
 				} else {
-					success = dswService.sendStockReceived(u, stockForDate);
+				    success = dswService.sendActivation(u, stockForDate);
+				    if (success) {
+				        u.setActivated(true);
+				        userRepository.save(u);
+				    } else {
+				        // if the activation failed, then don't continue with stocks for this user
+				        log.warn("Could not activate user "+u.getMsisdn()+", so continuing with the next user.");
+				        break;
+				    }
 				}
 				// mark as success or failure
 				if (success) {

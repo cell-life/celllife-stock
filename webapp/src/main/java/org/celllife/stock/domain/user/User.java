@@ -59,7 +59,7 @@ public class User implements Serializable {
 	private Boolean activated;
 	
 	public User() {
-		
+		this.activated = Boolean.FALSE;
 	}
 
 	public User(String msisdn, String encryptedPassword, String salt, String clinicCode, String clinicName) {
@@ -69,6 +69,7 @@ public class User implements Serializable {
 		this.salt = salt;
 		this.clinicCode = clinicCode;
 		this.clinicName = clinicName;
+		this.activated = Boolean.FALSE;
 	}
 
 	public Long getId() {

@@ -53,7 +53,7 @@ public class FacilityReportServiceTest {
 		Stock stock = null;
 		
 		try {
-			final User u = createAndSaveUser("0738847292");
+			final User u = createAndSaveUser("0738847292", true);
 			user = u;
 			drug = createAndSaveDrug("1112223333");
 			final Stock s = createAndSaveStock(user, drug, StockType.ORDER);
@@ -107,7 +107,7 @@ public class FacilityReportServiceTest {
 		Stock stock = null;
 		
 		try {
-			final User u = createAndSaveUser("0738847292");
+			final User u = createAndSaveUser("0738847292", true);
 			user = u;
 			drug = createAndSaveDrug("1112223333");
 			final Stock s = createAndSaveStock(user, drug, StockType.RECEIVED);
@@ -162,7 +162,7 @@ public class FacilityReportServiceTest {
 		Stock stock = null;
 		
 		try {
-			final User u = createAndSaveUser("0738847292");
+			final User u = createAndSaveUser("0738847292", true);
 			user = u;
 			drug = createAndSaveDrug("1112223333");
 			final Stock s = createAndSaveStock(user, drug, StockType.ORDER);
@@ -206,13 +206,72 @@ public class FacilityReportServiceTest {
     	}
 	}
 
+    @Test
+    public void testClinicActivation() {
+        User user = null;
+        Drug drug = null;
+        Stock stock = null;
+        
+        try {
+            final User u = createAndSaveUser("0738847292", false);
+            user = u;
+            drug = createAndSaveDrug("1112223333");
+            final Stock s = createAndSaveStock(user, drug, StockType.RECEIVED);
+            stock = s;
+            
+            facilityReportService.setDrugStockWarehouseService(new DrugStockWarehouseService() {
+
+                @Override
+                public boolean sendStockTakes(User user, List<Stock> stock) {
+                    Assert.fail();
+                    return true;
+                }
+
+                @Override
+                public boolean sendStockReceived(User user, List<Stock> stock) {
+                    Assert.fail();
+                    return true;
+                }
+
+                @Override
+                public boolean sendActivation(User user, List<Stock> stock) {
+                    Assert.assertEquals(u, user);
+                    Assert.assertNotNull(stock);
+                    Assert.assertTrue(stock.contains(s));
+                    return true;
+                }
+
+                @Override
+                public boolean createDrug(Drug drug) {
+                    Assert.fail();
+                    return true;
+                }               
+            });
+            
+            facilityReportService.runStockArrivalReport();
+            
+            Stock savedStock = stockRepository.findOne(stock.getId());
+            Assert.assertNotNull(savedStock);
+            Assert.assertEquals(StockStatus.SENT, savedStock.getStatus());
+            
+            User savedUser = userRepository.findOneByMsisdn("0738847292");
+            Assert.assertEquals(Boolean.TRUE, savedUser.isActivated());
+            
+        } finally {
+            if (stock != null) stockRepository.delete(stock);
+            if (user != null) userRepository.delete(user);
+            if (drug != null) drugRepository.delete(drug);
+        }
+    }
+
 	private Stock createAndSaveStock(User user, Drug drug, StockType type) {
 		Stock stock = new Stock(new Date(), 22, type, user, drug);
     	return stockRepository.save(stock);
 	}
 	
-	private User createAndSaveUser(String msisdn) {
+	private User createAndSaveUser(String msisdn, Boolean activated) {
 		User user = new User(msisdn, "jsdfklllllll", "ssss", "0000", "Demo Clinic 1");
+		user.setActivated(activated);
     	return userRepository.save(user);
 	}
 	
