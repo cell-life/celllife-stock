@@ -75,7 +75,7 @@ public class UserDto implements Serializable {
         newUser.setCoordinates(getCoordinates());
         newUser.setLeadTime(getLeadTime());
         newUser.setSafetyLevel(getSafetyLevel());
-        newUser.setActivated(isActivated());
+        newUser.setActivated(getActivated());
         return newUser;
     }
 
@@ -192,10 +192,6 @@ public class UserDto implements Serializable {
     }
 
     public Boolean getActivated() {
-        return activated;
-    }
-
-    public Boolean isActivated() {
         return activated;
     }
 

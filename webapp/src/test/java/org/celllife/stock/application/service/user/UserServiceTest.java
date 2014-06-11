@@ -80,7 +80,7 @@ public class UserServiceTest {
             UserDto user2 = userService.getUser(msisdn);
             Assert.assertEquals(new Integer(14), user2.getLeadTime());
             Assert.assertEquals(new Integer(3), user2.getSafetyLevel());
-            Assert.assertFalse(user2.isActivated());
+            Assert.assertFalse(user2.getActivated());
             
         } finally {
             if (userId != null) userRepository.delete(userId);
