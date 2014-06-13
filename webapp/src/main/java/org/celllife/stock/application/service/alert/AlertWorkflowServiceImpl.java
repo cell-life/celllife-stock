@@ -15,9 +15,11 @@ import org.celllife.stock.domain.notification.NotificationRepository;
 import org.celllife.stock.domain.user.User;
 import org.celllife.stock.domain.user.UserRepository;
 import org.celllife.utilities.mail.MailService;
+import org.celllife.utilities.publicholidays.service.PublicHolidayService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -47,6 +49,10 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 	
 	@Autowired
 	MailService mailService;
+	
+	@Autowired()
+	@Qualifier("SouthAfricanPublicHolidayService")
+	PublicHolidayService publicHolidayService;
 	
 	@Value("${mailSender.from}")
 	String mailFromAddress;
@@ -152,6 +158,10 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 	@Override
 	@Scheduled(cron = "${alertworkflow.cron}")
 	public void runWorkflow() {
+	    if (publicHolidayService.isPublicHoliday(getTodaysDate())) {
+	        log.info("No alerts today "+getTodaysDate()+" because it is a public holiday.");
+	        return;
+	    }
 		Iterator<User> userIt = userRepository.findAll().iterator();
 		while (userIt.hasNext()) {
 			User user = userIt.next();
@@ -164,4 +174,24 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 			}
 		}
 	}
+
+	// testable method
+    Date getTodaysDate() {
+        return new Date();
+    }
+
+    // for testing purposes
+    void setPublicHolidayService(PublicHolidayService publicHolidayService) {
+        this.publicHolidayService = publicHolidayService;
+    }
+    
+    // for testing purposes
+    void setAlertRepository(AlertRepository alertRepository) {
+        this.alertRepository = alertRepository;
+    }
+
+    // for testing purposes
+    void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 }

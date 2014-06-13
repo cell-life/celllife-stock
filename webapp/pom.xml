@@ -497,6 +497,12 @@
             <scope>test</scope>
         </dependency>
         
+        <!-- Cell-Life utilities -->
+         <dependency>
+             <groupId>org.celllife.utilities</groupId>
+             <artifactId>celllife-utilities</artifactId>
+         </dependency>
+        
         <!-- Communicate -->
         <dependency>
             <groupId>org.celllife.mobilisr</groupId>

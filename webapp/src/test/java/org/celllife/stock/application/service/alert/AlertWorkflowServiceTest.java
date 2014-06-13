@@ -18,9 +18,11 @@ import org.celllife.stock.domain.notification.NotificationRepository;
 import org.celllife.stock.domain.user.User;
 import org.celllife.stock.domain.user.UserRepository;
 import org.celllife.stock.test.TestConfiguration;
+import org.celllife.utilities.publicholidays.service.PublicHolidayService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -41,6 +43,10 @@ public class AlertWorkflowServiceTest {
 
     @Autowired
     private AlertRepository alertRepository;
+
+    @Autowired()
+    @Qualifier("SouthAfricanPublicHolidayService")
+    PublicHolidayService publicHolidayService;
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -73,6 +79,53 @@ public class AlertWorkflowServiceTest {
         	if (user != null) userRepository.delete(user);
         	if (drug1 != null) drugRepository.delete(drug1);
     	}
+	}
+	
+	@Test
+	public void testPublicHoliday() throws Exception {
+	    
+        final Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 16);
+        cal.set(Calendar.MONTH, Calendar.JUNE);
+	    
+	    class TestableAlertWorkflowService extends AlertWorkflowServiceImpl {
+            @Override
+            Date getTodaysDate() {
+                return cal.getTime();
+            }
+	        
+	    }
+	    
+        User user = null;
+        Drug drug1 = null;
+        
+        alertRepository.deleteAll();
+        drugRepository.deleteAll();
+        userRepository.deleteAll();
+        
+        try {
+            user = createAndSaveUser("27768198076");
+            drug1 = createAndSaveDrug("1112223331", "Disprin"); 
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            createAndSaveAlert(cal.getTime(), 1, AlertStatus.SENT, user, drug1);
+
+            TestableAlertWorkflowService myService = new TestableAlertWorkflowService();
+            myService.setAlertRepository(alertRepository);
+            myService.setUserRepository(userRepository);
+            myService.setPublicHolidayService(publicHolidayService);
+            myService.runWorkflow();
+            
+            Thread.sleep(5000); // wait for threads to finish
+            
+            Iterator<Notification> notificationIt = notificationRepository.findAll().iterator();
+            Assert.assertFalse("No notifications sent on a public holiday", notificationIt.hasNext());
+            
+        } finally {
+            notificationRepository.deleteAll();
+            alertRepository.deleteAll();
+            if (user != null) userRepository.delete(user);
+            if (drug1 != null) drugRepository.delete(drug1);
+        }
 	}
 	
 	@Test

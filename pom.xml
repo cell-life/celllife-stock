@@ -434,6 +434,14 @@
                 <version>2.1</version>
             </dependency>
 
+            <!-- Celllife Utilities -->
+
+            <dependency>
+                <groupId>org.celllife.utilities</groupId>
+                <artifactId>celllife-utilities</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
             <!-- Communicate -->
             <dependency>
                 <groupId>org.celllife.mobilisr</groupId>

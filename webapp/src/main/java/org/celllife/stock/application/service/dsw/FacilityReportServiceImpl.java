@@ -15,7 +15,6 @@ import org.celllife.stock.domain.stock.StockType;
 import org.celllife.stock.domain.user.User;
 import org.celllife.stock.domain.user.UserRepository;
 import org.celllife.stock.integration.dsw.DrugStockWarehouseService;
-//import org.celllife.stock.integration.dsw.DrugStockWarehouseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
