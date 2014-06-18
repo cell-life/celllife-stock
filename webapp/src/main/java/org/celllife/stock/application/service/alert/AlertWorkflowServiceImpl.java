@@ -1,6 +1,7 @@
 package org.celllife.stock.application.service.alert;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -158,10 +159,16 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 	@Override
 	@Scheduled(cron = "${alertworkflow.cron}")
 	public void runWorkflow() {
-	    if (publicHolidayService.isPublicHoliday(getTodaysDate())) {
-	        log.info("No alerts today "+getTodaysDate()+" because it is a public holiday.");
-	        return;
-	    }
+        Date today = getTodaysDate();
+        if (publicHolidayService.isPublicHoliday(today)) {
+            log.info("No alerts today " + today + " because it is a public holiday.");
+            return;
+        } else if (isWeekendDay(today)) {
+            log.info("No alerts today " + today + " because it is a weekend.");
+            return;
+        } else {
+            log.info("Running alerts today " + today + " because it is a working day.");
+        }
 		Iterator<User> userIt = userRepository.findAll().iterator();
 		while (userIt.hasNext()) {
 			User user = userIt.next();
@@ -174,6 +181,13 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
 			}
 		}
 	}
+	
+    boolean isWeekendDay(Date today) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(today);
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        return (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
+    }
 
 	// testable method
     Date getTodaysDate() {
