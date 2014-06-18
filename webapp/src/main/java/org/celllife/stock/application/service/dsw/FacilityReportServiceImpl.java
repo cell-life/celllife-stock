@@ -99,12 +99,16 @@ public class FacilityReportServiceImpl implements FacilityReportService {
 		Map<User, List<Stock>> stockByUserMap = new HashMap<User, List<Stock>>();
 		for (Stock s : stock) {
 			User u = s.getUser();
-			List<Stock> stockForUser = stockByUserMap.get(u);
-			if (stockForUser == null) {
-				stockForUser = new ArrayList<Stock>();
-				stockByUserMap.put(u, stockForUser);
+			if (u == null) {
+			    log.error("OMG the user is null for stock "+stock);
+			} else {
+    			List<Stock> stockForUser = stockByUserMap.get(u);
+    			if (stockForUser == null) {
+    				stockForUser = new ArrayList<Stock>();
+    				stockByUserMap.put(u, stockForUser);
+    			}
+    			stockForUser.add(s);
 			}
-			stockForUser.add(s);
 		}
 		return stockByUserMap;
 	}
