@@ -12,18 +12,20 @@ public interface DrugStockWarehouseService {
 	/**
 	 * Send the list of Drug Stocks to the DSW.
 	 * @param user User belonging to the clinic doing the stock take
-	 * @param stock List of Stock takes
+	 * @param stock List of Stock takes - must all be on the same date
+	 * @param update Boolean TRUE if there was already stock submitted on the date, FALSE otherwise
 	 * @return true if the sending of data was successful
 	 */
-	boolean sendStockTakes(User user, List<Stock> stock);
+	boolean sendStockTakes(User user, List<Stock> stock, Boolean update);
 
 	/**
 	 * Sends the list of Stock arrivals to the DSW
 	 * @param user User belonging to the clinic receiving stock
-	 * @param stock List of Stock received
+	 * @param stock List of Stock received  - must all be on the same date
+	 * @param update Boolean TRUE if there was already stock received on the date, FALSE otherwise
 	 * @return true if the sending of data was successful
 	 */
-	boolean sendStockReceived(User user, List<Stock> stock);
+	boolean sendStockReceived(User user, List<Stock> stock, Boolean update);
 
 	/**
 	 * Sends the list of initial Stock levels to the DSW

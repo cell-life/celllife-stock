@@ -1,6 +1,7 @@
 package org.celllife.stock.integration.dsw;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -52,32 +53,44 @@ public class DrugStockWarehouseServiceTest {
 		boolean success = dswService.sendActivation(user, stock);
 		Assert.assertTrue(success);
 	}
-
-	@Test
-	@Ignore("integration test")
-	public void testStockTake() throws Exception {
-		User user = new User();
-		user.setClinicCode("0000");
-		List<Stock> stock = new ArrayList<Stock>();
-		Drug grandpa = new Drug("60015204", "Grandpa 24 tablets");
-		stock.add(new Stock(new Date(), 25, StockType.ORDER, user, grandpa));
-		Drug panado = new Drug("60011053", "Panado 500mg 24 tablets");
-		stock.add(new Stock(new Date(), 10, StockType.ORDER, user, panado));
-		boolean success = dswService.sendStockTakes(user, stock);
-		Assert.assertTrue(success);
-	}
+	
+    @Test
+    @Ignore("integration test")
+    public void testStockTakeDuplicateDate() throws Exception {
+        User user = new User();
+        user.setClinicCode("0000");
+        
+        Calendar cal = Calendar.getInstance();
+        
+        // first send grandpa
+        List<Stock> stock = new ArrayList<Stock>();
+        Drug grandpa = new Drug("60015204", "Grandpa 24 tablets");
+        stock.add(new Stock(cal.getTime(), 25, StockType.ORDER, user, grandpa));
+        boolean success = dswService.sendStockTakes(user, stock, false);
+        
+        Assert.assertTrue(success);
+        
+        // then send panado
+        stock = new ArrayList<Stock>();
+        Drug panado = new Drug("60011053", "Panado 500mg 24 tablets");
+        stock.add(new Stock(cal.getTime(), 10, StockType.ORDER, user, panado));
+        success = dswService.sendStockTakes(user, stock, true);
+        
+        Assert.assertTrue(success);
+    }
 
 	@Test
 	@Ignore("integration test")
 	public void testStockArrival() throws Exception {
 		User user = new User();
 		user.setClinicCode("0000");
+        Calendar cal = Calendar.getInstance();
 		List<Stock> stock = new ArrayList<Stock>();
 		Drug grandpa = new Drug("60015204", "Grandpa 24 tablets");
-		stock.add(new Stock(new Date(), 25, StockType.RECEIVED, user, grandpa));
+		stock.add(new Stock(cal.getTime(), 25, StockType.RECEIVED, user, grandpa));
 		Drug panado = new Drug("60011053", "Panado 500mg 24 tablets");
-		stock.add(new Stock(new Date(), 10, StockType.RECEIVED, user, panado));
-		boolean success = dswService.sendStockReceived(user, stock);
+		stock.add(new Stock(cal.getTime(), 10, StockType.RECEIVED, user, panado));
+		boolean success = dswService.sendStockReceived(user, stock, false);
 		Assert.assertTrue(success);
 	}
 }

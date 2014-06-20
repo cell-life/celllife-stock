@@ -3,6 +3,7 @@ package org.celllife.stock.application.service.dsw;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -63,9 +64,9 @@ public class FacilityReportServiceImpl implements FacilityReportService {
 				boolean success = false;
 				if (u.isActivated()) {
     				if (type == StockType.ORDER) {
-    					success = dswService.sendStockTakes(u, stockForDate);
+    					success = dswService.sendStockTakes(u, stockForDate, hasExistingStockReport(type, u, d));
     				} else {
-    					success = dswService.sendStockReceived(u, stockForDate);
+    					success = dswService.sendStockReceived(u, stockForDate, hasExistingStockReport(type, u, d));
     				}
 				} else {
 				    success = dswService.sendActivation(u, stockForDate);
@@ -138,4 +139,31 @@ public class FacilityReportServiceImpl implements FacilityReportService {
 	public void setDrugStockWarehouseService(DrugStockWarehouseService dswService) {
 		this.dswService = dswService;
 	}
+	
+	private Boolean hasExistingStockReport(StockType type, User user, Date stockDate) {
+	    List<Stock> stock = stockRepository.findSentByTypeAndUserAndDateBetween(type, user, 
+	            getBeginningOfDate(stockDate), getEndOfDate(stockDate));
+	    log.debug("Stock "+type+" already sent on "+stockDate+"? "+!stock.isEmpty());
+	    return !stock.isEmpty();
+	}
+
+    private Date getBeginningOfDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    private Date getEndOfDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 59);
+        return cal.getTime();
+    }
 }

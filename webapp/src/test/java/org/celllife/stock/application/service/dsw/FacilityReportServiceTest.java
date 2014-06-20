@@ -56,21 +56,22 @@ public class FacilityReportServiceTest {
 			final User u = createAndSaveUser("0738847292", true);
 			user = u;
 			drug = createAndSaveDrug("1112223333");
-			final Stock s = createAndSaveStock(user, drug, StockType.ORDER);
+			final Stock s = createAndSaveStock(user, drug, StockType.ORDER, StockStatus.NEW);
 			stock = s;
 			
 			facilityReportService.setDrugStockWarehouseService(new DrugStockWarehouseService() {
 
 				@Override
-				public boolean sendStockTakes(User user, List<Stock> stock) {
+				public boolean sendStockTakes(User user, List<Stock> stock, Boolean update) {
 					Assert.assertEquals(u, user);
 					Assert.assertNotNull(stock);
 					Assert.assertTrue(stock.contains(s));
+					Assert.assertFalse(update);
 					return true;
 				}
 
 				@Override
-				public boolean sendStockReceived(User user, List<Stock> stock) {
+				public boolean sendStockReceived(User user, List<Stock> stock, Boolean update) {
 					Assert.fail();
 					return true;
 				}
@@ -99,6 +100,67 @@ public class FacilityReportServiceTest {
         	if (drug != null) drugRepository.delete(drug);
     	}
 	}
+	
+    @Test
+    public void testStockTakeReportDuplicate() {
+        User user = null;
+        Drug drug1 = null;
+        Drug drug2 = null;
+        Stock stock1 = null;
+        Stock stock2 = null;
+        
+        try {
+            final User u = createAndSaveUser("0738847292", true);
+            user = u;
+            drug1 = createAndSaveDrug("1112223333");
+            drug2 = createAndSaveDrug("1112223334");
+            stock1 = createAndSaveStock(user, drug1, StockType.ORDER, StockStatus.SENT);
+            stock2 = createAndSaveStock(user, drug2, StockType.ORDER, StockStatus.NEW);
+            final Stock s = stock2;
+            
+            facilityReportService.setDrugStockWarehouseService(new DrugStockWarehouseService() {
+
+                @Override
+                public boolean sendStockTakes(User user, List<Stock> stock, Boolean update) {
+                    Assert.assertEquals(u, user);
+                    Assert.assertNotNull(stock);
+                    Assert.assertTrue(stock.contains(s));
+                    Assert.assertTrue(update);
+                    return true;
+                }
+
+                @Override
+                public boolean sendStockReceived(User user, List<Stock> stock, Boolean update) {
+                    Assert.fail();
+                    return true;
+                }
+
+                @Override
+                public boolean sendActivation(User user, List<Stock> stock) {
+                    Assert.fail();
+                    return true;
+                }
+
+                @Override
+                public boolean createDrug(Drug drug) {
+                    Assert.fail();
+                    return true;
+                }               
+            });
+            
+            facilityReportService.runStockTakeReport();
+            Stock savedStock = stockRepository.findOne(stock1.getId());
+            Assert.assertNotNull(savedStock);
+            Assert.assertEquals(StockStatus.SENT, savedStock.getStatus());
+            
+        } finally {
+            if (stock1 != null) stockRepository.delete(stock1);
+            if (stock2 != null) stockRepository.delete(stock2);
+            if (user != null) userRepository.delete(user);
+            if (drug1 != null) drugRepository.delete(drug1);
+            if (drug2 != null) drugRepository.delete(drug2);
+        }
+    }
 
 	@Test
 	public void testStockArrivalReport() {
@@ -110,22 +172,23 @@ public class FacilityReportServiceTest {
 			final User u = createAndSaveUser("0738847292", true);
 			user = u;
 			drug = createAndSaveDrug("1112223333");
-			final Stock s = createAndSaveStock(user, drug, StockType.RECEIVED);
+			final Stock s = createAndSaveStock(user, drug, StockType.RECEIVED, StockStatus.NEW);
 			stock = s;
 			
 			facilityReportService.setDrugStockWarehouseService(new DrugStockWarehouseService() {
 
 				@Override
-				public boolean sendStockTakes(User user, List<Stock> stock) {
+				public boolean sendStockTakes(User user, List<Stock> stock, Boolean update) {
 					Assert.fail();
 					return true;
 				}
 
 				@Override
-				public boolean sendStockReceived(User user, List<Stock> stock) {
+				public boolean sendStockReceived(User user, List<Stock> stock, Boolean update) {
 					Assert.assertEquals(u, user);
 					Assert.assertNotNull(stock);
 					Assert.assertTrue(stock.contains(s));
+					Assert.assertFalse(update);
 					return true;
 				}
 
@@ -165,18 +228,18 @@ public class FacilityReportServiceTest {
 			final User u = createAndSaveUser("0738847292", true);
 			user = u;
 			drug = createAndSaveDrug("1112223333");
-			final Stock s = createAndSaveStock(user, drug, StockType.ORDER);
+			final Stock s = createAndSaveStock(user, drug, StockType.ORDER, StockStatus.NEW);
 			stock = s;
 			
 			facilityReportService.setDrugStockWarehouseService(new DrugStockWarehouseService() {
 
 				@Override
-				public boolean sendStockTakes(User user, List<Stock> stock) {
+				public boolean sendStockTakes(User user, List<Stock> stock, Boolean update) {
 					return false;
 				}
 
 				@Override
-				public boolean sendStockReceived(User user, List<Stock> stock) {
+				public boolean sendStockReceived(User user, List<Stock> stock, Boolean update) {
 					Assert.fail();
 					return true;
 				}
@@ -216,19 +279,19 @@ public class FacilityReportServiceTest {
             final User u = createAndSaveUser("0738847292", false);
             user = u;
             drug = createAndSaveDrug("1112223333");
-            final Stock s = createAndSaveStock(user, drug, StockType.RECEIVED);
+            final Stock s = createAndSaveStock(user, drug, StockType.RECEIVED, StockStatus.NEW);
             stock = s;
             
             facilityReportService.setDrugStockWarehouseService(new DrugStockWarehouseService() {
 
                 @Override
-                public boolean sendStockTakes(User user, List<Stock> stock) {
+                public boolean sendStockTakes(User user, List<Stock> stock, Boolean update) {
                     Assert.fail();
                     return true;
                 }
 
                 @Override
-                public boolean sendStockReceived(User user, List<Stock> stock) {
+                public boolean sendStockReceived(User user, List<Stock> stock, Boolean update) {
                     Assert.fail();
                     return true;
                 }
@@ -264,8 +327,9 @@ public class FacilityReportServiceTest {
         }
     }
 
-	private Stock createAndSaveStock(User user, Drug drug, StockType type) {
+	private Stock createAndSaveStock(User user, Drug drug, StockType type, StockStatus status) {
 		Stock stock = new Stock(new Date(), 22, type, user, drug);
+		stock.setStatus(status);
     	return stockRepository.save(stock);
 	}
 	

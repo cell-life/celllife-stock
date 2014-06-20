@@ -56,7 +56,7 @@ public class StockRepositoryTest {
 	    	setTimeToStart(cal);
 	    	Date startDate = cal.getTime();
 	    	
-	    	setDateToEnd(cal);
+	    	setTimeToEnd(cal);
 	    	Date endDate = cal.getTime();
 	    	
 	    	List<Stock> allStock = stockRepository.findByDateBetweenByUserAndType(startDate, endDate, user, StockType.ORDER);
@@ -108,7 +108,7 @@ public class StockRepositoryTest {
 	    	Stock stock4 = new Stock(cal.getTime(), 40, StockType.RECEIVED, savedUser, savedDrug);
 	    	savedStock4 = stockRepository.save(stock4);
 	    	
-	    	setDateToEnd(cal);
+	    	setTimeToEnd(cal);
 	    	Date endDate = cal.getTime();
 	    	
 	    	List<Stock> allStock = stockRepository.findByDateBetweenByUserAndType(startDate, endDate, user, StockType.RECEIVED);
@@ -190,7 +190,80 @@ public class StockRepositoryTest {
     	}    	
     }
 
-	private void setDateToEnd(Calendar cal) {
+    @Test
+    public void testFindSentByTypeAndUserAndDateAlreadySent() throws Exception {
+        Stock savedStock1 = null;
+        User savedUser = null;
+        Drug savedDrug = null;
+        
+        try {
+            String msisdn = "0762837491";
+            User user = new User(msisdn, "jsdfklllllll", "ssss", "0000", "Demo Clinic 1");
+            savedUser = userRepository.save(user);
+            
+            String barcode = "0762837491";
+            Drug drug = new Drug(barcode, "Disprin");
+            savedDrug = drugRepository.save(drug);
+
+            Stock stock1 = new Stock(new Date(), 10, StockType.ORDER, savedUser, savedDrug);
+            stock1.setStatus(StockStatus.SENT);
+            savedStock1 = stockRepository.save(stock1);
+            
+            Calendar cal = Calendar.getInstance();
+            setTimeToStart(cal);
+            Date start = cal.getTime();
+            setTimeToEnd(cal);
+            Date end = cal.getTime();
+            
+            List<Stock> allStock = stockRepository.findSentByTypeAndUserAndDateBetween(StockType.ORDER, user, start, end);
+            Assert.assertNotNull(allStock);
+            Assert.assertEquals(1, allStock.size());
+            
+        } finally {
+            if (savedStock1 != null) stockRepository.delete(savedStock1);
+            if (savedUser != null) userRepository.delete(savedUser);
+            if (savedDrug != null) drugRepository.delete(savedDrug);
+        }       
+    }
+
+    @Test
+    public void testFindSentByTypeAndUserAndDateNotAlreadySent() throws Exception {
+        Stock savedStock1 = null;
+        User savedUser = null;
+        Drug savedDrug = null;
+        
+        try {
+            String msisdn = "0762837491";
+            User user = new User(msisdn, "jsdfklllllll", "ssss", "0000", "Demo Clinic 1");
+            savedUser = userRepository.save(user);
+            
+            String barcode = "0762837491";
+            Drug drug = new Drug(barcode, "Disprin");
+            savedDrug = drugRepository.save(drug);
+
+            Stock stock1 = new Stock(new Date(), 10, StockType.ORDER, savedUser, savedDrug);
+            stock1.setStatus(StockStatus.NEW);
+            savedStock1 = stockRepository.save(stock1);
+            
+            Calendar cal = Calendar.getInstance();
+            setTimeToStart(cal);
+            Date start = cal.getTime();
+            setTimeToEnd(cal);
+            Date end = cal.getTime();
+            
+            List<Stock> allStock = stockRepository.findSentByTypeAndUserAndDateBetween(StockType.ORDER, user, start, end);
+
+            Assert.assertNotNull(allStock);
+            Assert.assertEquals(0, allStock.size());
+            
+        } finally {
+            if (savedStock1 != null) stockRepository.delete(savedStock1);
+            if (savedUser != null) userRepository.delete(savedUser);
+            if (savedDrug != null) drugRepository.delete(savedDrug);
+        }       
+    }
+
+	private void setTimeToEnd(Calendar cal) {
 		cal.set(Calendar.HOUR, 23);
 		cal.set(Calendar.MINUTE, 59);
 		cal.set(Calendar.SECOND, 59);

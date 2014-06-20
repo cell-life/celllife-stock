@@ -42,7 +42,7 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 
 
 	@Override
-	public boolean sendStockTakes(User user, List<Stock> stock) {
+	public boolean sendStockTakes(User user, List<Stock> stock, Boolean update) {
 		/*{
 			"stockLevels": [
 				{
@@ -57,11 +57,11 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 				}
 			]
 		}*/
-		return sendStock(user, stock, StockType.ORDER);
+		return sendStock(user, stock, StockType.ORDER, update);
 	}
 
 	@Override
-	public boolean sendStockReceived(User user, List<Stock> stock) {
+	public boolean sendStockReceived(User user, List<Stock> stock, Boolean update) {
 		/*{
 			"stockArrived": [
 				{
@@ -76,7 +76,7 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 				}
 			]
 		}*/
-		return sendStock(user, stock, StockType.RECEIVED);
+		return sendStock(user, stock, StockType.RECEIVED, update);
 	}
 	
 	@Override
@@ -141,15 +141,15 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 		return post(URL_DRUGS, drugMap);
 	}
 	
-	private boolean sendStock(User user, List<Stock> stock, StockType type) {
+	private boolean sendStock(User user, List<Stock> stock, StockType type, Boolean update) {
 		if (stock == null || stock.isEmpty()) {
 			return true;
 		}
-		boolean status = sendStock(user, stock);
+		boolean status = sendStock(user, stock, update);
 		return status;
 	}
 
-	private boolean sendStock(User user, List<Stock> stock) {
+	private boolean sendStock(User user, List<Stock> stock, Boolean update) {
 		if (stock == null || stock.isEmpty()) {
 			return true;
 		}
@@ -173,13 +173,59 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 				stockList.add(convertStock(st));
 			}
 			stockMap.put(mapName, stockList);
-			return post(url, stockMap);
+            
+            if (update) {
+                return put(url, stockMap);
+            } else {
+                return post(url, stockMap);
+            }
+            
 		} else {
 			// no stock to send, so nothing to go wrong!
 			return true;
 		}
 		return false;
 	}
+    
+    private boolean put(String url, Map<String, Object> data) {
+        try {
+            // put the data
+            if (apiUrl.endsWith("/")) {
+                apiUrl = apiUrl.substring(0, apiUrl.length()-1);
+            }
+            url = apiUrl + "/" + url;
+            log.debug("PUT data "+data+" to url "+url);
+            def client = new groovyx.net.http.RESTClient(url)
+            client.auth.basic(username, password)
+            client.handler.'409' = { resp ->
+                println "Duplicate"
+            }
+            Map<String, Object> body = new HashMap<String, Object>();
+            body.put("requestContentType", ContentType.JSON);
+            body.put("body", data);
+            def response = client.put(body)/* {
+                response.'409' = { resp ->
+                    println 'duplicate'
+                }
+            }*/
+            log.debug("POST returned status "+response.status);
+            return true;
+        } catch (HttpResponseException e) {
+            if (e.getStatusCode() == 409) {
+                // if the document already exists or has been created, return a success
+                return true;
+            } else {
+                log.error("Could not send stock. Status="+e.getStatusCode(), e)
+                log.error("URL="+url);
+                log.error("Data="+data);
+            }
+        } catch (Throwable t) {
+            log.error("Could not send stock.", t)
+            log.error("URL="+url);
+            log.error("Data="+data);
+        }
+        return false;
+    }
 
 	private boolean post(String url, Map<String, Object> data) {
 		try {
