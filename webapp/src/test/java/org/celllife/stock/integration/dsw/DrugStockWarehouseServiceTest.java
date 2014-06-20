@@ -93,4 +93,15 @@ public class DrugStockWarehouseServiceTest {
 		boolean success = dswService.sendStockReceived(user, stock, false);
 		Assert.assertTrue(success);
 	}
+	
+	@Test
+	@Ignore("integration test - please change clinicCode for this test to run successfully")
+	public void testCreatePharmacy() throws Exception {
+	    User user = new User();
+	    user.setClinicCode("999999");
+	    user.setClinicName("Dagmar");
+	    user.setCoordinates("[25.8239,-26.5583]");
+	    boolean success = dswService.createPharmacy(user);
+	    Assert.assertTrue(success);
+	}
 }

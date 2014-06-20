@@ -34,6 +34,13 @@ public interface DrugStockWarehouseService {
 	 * @return true if the sending of data was successful
 	 */
 	boolean sendActivation(User user, List<Stock> stock);
+    
+    /**
+     * Creates a pharmacy entity on the DSW
+     * @param user User with details of the pharmacy
+     * @return true if the creation was a success
+     */
+    boolean createPharmacy(User user);
 
 	/**
 	 * Creates the drug in the DSW

@@ -12,7 +12,6 @@ import org.celllife.stock.domain.user.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 
@@ -27,6 +26,7 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 	private static String URL_STOCKTAKE = "pharmacies/{id}/stocktakes/{date}";
 	private static String URL_STOCKARRIVALS = "pharmacies/{id}/stockarrivals/{date}";
 	private static String URL_ACTIVATION = "pharmacies/{id}/activation";
+    private static String URL_PHARMACIES = "pharmacies";
 	private static String URL_DRUGS = "drugs";
 
 	private static String DATE_FORMAT = "yyyyMMdd";
@@ -110,7 +110,36 @@ class DrugStockWarehouseServiceImpl implements DrugStockWarehouseService {
 		return post(url, activationMap);
 	}
 
-	@Async("defaultTaskExecutor")
+    @Override
+    public boolean createPharmacy(User user) {
+        String url = URL_PHARMACIES
+        // create the request
+        Map<String, Object> createMap = new HashMap<String, Object>()
+        createMap.put("name", user.getClinicName())
+        createMap.put("pharmacyId", user.getClinicCode())
+        createMap.put("location", user.getCoordinates())
+        List<Map<String, Object>> idList = new ArrayList<Map<String, Object>>()
+        Map<String, Object> idMap = new HashMap<String, Object>()
+        idMap.put("id", user.getClinicCode())
+        idMap.put("idType", "CELLLIFE")
+        idList.add(idMap)
+        createMap.put("identifiers", idList)
+        
+        /*{
+            "name": "Good Health Pharmacy",
+            "pharmacyId": "0000",
+            "location": "Cape Town, Western Cape",
+            "leadTime": 5,
+            "identifers": [
+                {
+                    "id": "28119c4f-baec-4912-b026-91c9e359e6b8",
+                    "idType": "DHIS2"
+                }
+            ]
+        }*/
+        return post(url, createMap);
+    }
+
 	@Override
 	public boolean createDrug(Drug drug) {
 		Map<String, Object> drugMap = new HashMap<String, Object>();

@@ -86,7 +86,13 @@ public class FacilityReportServiceTest {
 				public boolean createDrug(Drug drug) {
 					Assert.fail();
 					return true;
-				}				
+				}		
+
+                @Override
+                public boolean createPharmacy(User user) {
+                    Assert.fail();
+                    return true;
+                }
 			});
 			
 			facilityReportService.runStockTakeReport();
@@ -145,7 +151,13 @@ public class FacilityReportServiceTest {
                 public boolean createDrug(Drug drug) {
                     Assert.fail();
                     return true;
-                }               
+                }  
+                
+                @Override
+                public boolean createPharmacy(User user) {
+                    Assert.fail();
+                    return true;
+                }
             });
             
             facilityReportService.runStockTakeReport();
@@ -202,7 +214,13 @@ public class FacilityReportServiceTest {
 				public boolean createDrug(Drug drug) {
 					Assert.fail();
 					return true;
-				}				
+				}	
+
+                @Override
+                public boolean createPharmacy(User user) {
+                    Assert.fail();
+                    return true;
+                }
 			});
 			
 			facilityReportService.runStockArrivalReport();
@@ -254,7 +272,13 @@ public class FacilityReportServiceTest {
 				public boolean createDrug(Drug drug) {
 					Assert.fail();
 					return true;
-				}				
+				}		
+
+                @Override
+                public boolean createPharmacy(User user) {
+                    Assert.fail();
+                    return true;
+                }
 			});
 			
 			facilityReportService.runStockTakeReport();
@@ -308,7 +332,13 @@ public class FacilityReportServiceTest {
                 public boolean createDrug(Drug drug) {
                     Assert.fail();
                     return true;
-                }               
+                }  
+
+                @Override
+                public boolean createPharmacy(User user) {
+                    Assert.assertEquals(u, user);
+                    return true;
+                }
             });
             
             facilityReportService.runStockArrivalReport();

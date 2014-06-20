@@ -69,6 +69,7 @@ public class FacilityReportServiceImpl implements FacilityReportService {
     					success = dswService.sendStockReceived(u, stockForDate, hasExistingStockReport(type, u, d));
     				}
 				} else {
+				    dswService.createPharmacy(u);
 				    success = dswService.sendActivation(u, stockForDate);
 				    if (success) {
 				        u.setActivated(true);
