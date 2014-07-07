@@ -11,7 +11,7 @@
 	    <file>target/logs/stock.log</file>
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 	      <!-- daily rollover -->
-	      <fileNamePattern>stock.%d{yyyy-MM-dd}.log</fileNamePattern>
+	      <fileNamePattern>target/logs/stock.%d{yyyy-MM-dd}.log</fileNamePattern>
 	      <!-- keep 30 days' worth of history -->
 	      <maxHistory>30</maxHistory>
 	    </rollingPolicy>
@@ -23,7 +23,7 @@
 
     <!-- Cell-Life -->
 
-    <logger name="org.celllife" level="TRACE">
+    <logger name="org.celllife" level="DEBUG">
     	<appender-ref ref="STDOUT" />
     	<appender-ref ref="FILE" />
     </logger>
