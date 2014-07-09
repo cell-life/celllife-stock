@@ -42,6 +42,87 @@ public class UserServiceTest {
 			if (userId != null) userRepository.delete(userId);
 		}
 	}
+	
+    @Test(expected = StockException.class)
+    public void testCreateUserEmptyPassword() throws Exception {
+        Long userId = null;
+        try {
+            UserDto user = new UserDto("0118198075", " ", "0000", "Demo Clinic 1");
+            UserDto savedUser = userService.createUser(user);
+            userId = savedUser.getId();
+        } finally {
+            if (userId != null) userRepository.delete(userId);
+        }
+    }
+	
+	@Test
+	public void testUpdateUser() throws Exception {
+        Long userId = null;
+        try {
+            UserDto user = new UserDto("0118198075", "1234", "0000", "Demo Clinic 1");
+            UserDto savedUser = userService.createUser(user);
+            userId = savedUser.getId();
+
+            savedUser.setClinicCode("0001");
+            UserDto updatedUser = userService.updateUser(savedUser);
+            Assert.assertEquals("0001", updatedUser.getClinicCode());
+
+        } finally {
+            if (userId != null) userRepository.delete(userId);
+        }
+	}
+	
+	@Test
+    public void testUpdateUserWithPasswordReset() throws Exception {
+        Long userId = null;
+        try {
+            UserDto user = new UserDto("0118198075", "1234", "0000", "Demo Clinic 1");
+            UserDto savedUser = userService.createUser(user);
+            userId = savedUser.getId();
+
+            savedUser.setPassword("4321");
+            savedUser.setOldPassword("1234");
+            UserDto updatedUser = userService.updateUser(savedUser);
+
+            Assert.assertEquals("0000", updatedUser.getClinicCode());
+
+        } finally {
+            if (userId != null) userRepository.delete(userId);
+        }
+    }
+
+    @Test(expected = StockException.class)
+    public void testUpdateUserWithPasswordResetNoOldPassword() throws Exception {
+        Long userId = null;
+        try {
+            UserDto user = new UserDto("0118198075", "1234", "0000", "Demo Clinic 1");
+            UserDto savedUser = userService.createUser(user);
+            userId = savedUser.getId();
+
+            savedUser.setPassword("4321");
+            userService.updateUser(savedUser);
+
+        } finally {
+            if (userId != null) userRepository.delete(userId);
+        }
+    }	
+	
+	@Test(expected = StockException.class)
+    public void testUpdateUserWithPasswordResetInvalidOldPassword() throws Exception {
+        Long userId = null;
+        try {
+            UserDto user = new UserDto("0118198075", "1234", "0000", "Demo Clinic 1");
+            UserDto savedUser = userService.createUser(user);
+            userId = savedUser.getId();
+
+            savedUser.setPassword("4321");
+            savedUser.setOldPassword("1235");
+            userService.updateUser(savedUser);
+
+        } finally {
+            if (userId != null) userRepository.delete(userId);
+        }
+    }
 
 	@Test(expected = StockException.class)
 	public void testCreateDuplicateUser() throws Exception {

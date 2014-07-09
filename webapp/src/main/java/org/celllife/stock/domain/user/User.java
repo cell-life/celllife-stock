@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.TableGenerator;
 
+import org.springframework.util.StringUtils;
+
 @Entity
 @Cacheable
 /**
@@ -70,6 +72,41 @@ public class User implements Serializable {
 		this.clinicCode = clinicCode;
 		this.clinicName = clinicName;
 		this.activated = Boolean.FALSE;
+	}
+	
+
+	public User merge(User u) {
+	    if (!StringUtils.isEmpty(u.getMsisdn())) {
+	        this.setMsisdn(u.getMsisdn());
+	    }
+	    if (!StringUtils.isEmpty(u.getEncryptedPassword())) {
+	        this.setEncryptedPassword(u.getEncryptedPassword());
+	    }
+	    // NOTE: not modifying password SALT
+	    if (!StringUtils.isEmpty(u.getClinicCode())) {
+	        this.setClinicCode(u.getClinicCode());
+	    }
+	    if (!StringUtils.isEmpty(u.getClinicName())) {
+	        this.setClinicName(u.getClinicName());
+	    }
+	    if (!StringUtils.isEmpty(u.getCoordinates())) {
+	        this.setCoordinates(u.getCoordinates());
+	    }
+	    if (!StringUtils.isEmpty(u.getPharmacistName())) {
+	        this.setPharmacistName(u.getPharmacistName());
+	    }
+	    if (!StringUtils.isEmpty(u.getPharmacistMsisdn())) {
+            this.setPharmacistMsisdn(u.getPharmacistMsisdn());
+        }
+        if (!StringUtils.isEmpty(u.getClinicPhoneNumber())) {
+            this.setClinicPhoneNumber(u.getClinicPhoneNumber());
+        }
+        if (!StringUtils.isEmpty(u.getDistrictManagerEmail())) {
+            this.setDistrictManagerEmail(u.getDistrictManagerEmail());
+        }
+        // NOTE: not modifying leadTime, safetyLevel or activated as 
+        // this is something that should be modified from the app
+	    return this;
 	}
 
 	public Long getId() {

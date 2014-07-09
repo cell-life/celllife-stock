@@ -14,6 +14,8 @@ public class UserDto implements Serializable {
 
 	private String password; // this is used for creation of users + password resets
 	
+	private String oldPassword; // this is used for password resets - must be equal to their old password
+	
 	private String salt;
 	
 	private String clinicCode;
@@ -112,7 +114,15 @@ public class UserDto implements Serializable {
 		this.password = password;
 	}
 
-	public String getSalt() {
+	public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public String getSalt() {
 		return salt;
 	}
 
@@ -234,11 +244,11 @@ public class UserDto implements Serializable {
     @Override
     public String toString() {
         return "UserDto [id=" + id + ", msisdn=" + msisdn + ", encryptedPassword=" + encryptedPassword + ", password="
-                + password + ", salt=" + salt + ", clinicCode=" + clinicCode + ", clinicName=" + clinicName
-                + ", coordinates=" + coordinates + ", clinicPhoneNumber=" + clinicPhoneNumber + ", pharmacistName="
-                + pharmacistName + ", pharmacistMsisdn=" + pharmacistMsisdn + ", districtManagerEmail="
-                + districtManagerEmail + ", safetyLevel=" + safetyLevel + ", leadTime=" + leadTime + ", activated="
-                + activated + "]";
+                + password + ", oldPassword=" + oldPassword + ", salt=" + salt + ", clinicCode=" + clinicCode
+                + ", clinicName=" + clinicName + ", coordinates=" + coordinates + ", clinicPhoneNumber="
+                + clinicPhoneNumber + ", pharmacistName=" + pharmacistName + ", pharmacistMsisdn=" + pharmacistMsisdn
+                + ", districtManagerEmail=" + districtManagerEmail + ", safetyLevel=" + safetyLevel + ", leadTime="
+                + leadTime + ", activated=" + activated + "]";
     }
 
 }

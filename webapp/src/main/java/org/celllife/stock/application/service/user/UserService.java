@@ -12,6 +12,14 @@ public interface UserService {
 	 * @return saved User (with Id specified)
 	 */
 	UserDto createUser(UserDto user);
+
+	/**
+	 * Updates the user details on the system. If the clearText password is set, then 
+	 * the users password will be updated.
+	 * @param user User to update
+	 * @return updated User
+	 */
+	UserDto updateUser(UserDto user);
 	
 	/**
 	 * Retrieves the user given the msisdn (cellphone number).

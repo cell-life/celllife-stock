@@ -60,4 +60,15 @@ public class UserController {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 		}
 	}
+	
+	@RequestMapping(method = RequestMethod.PUT)
+	public void updateUser(@RequestBody UserDto user, HttpServletResponse response) throws IOException {
+	    try {
+	        userService.updateUser(user);
+	        response.setStatus(HttpServletResponse.SC_OK);
+	    } catch (StockException e) {
+	        log.error("Error while updating user "+user, e);
+	        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+	    }
+	}
 }
