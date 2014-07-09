@@ -37,7 +37,7 @@ public class UserDto implements Serializable {
     private Boolean activated;
 	
 	public UserDto() {
-		
+		activated = Boolean.FALSE;
 	}
 	
 	public UserDto(User user) {
@@ -64,6 +64,7 @@ public class UserDto implements Serializable {
 		this.password = password;
 		this.clinicCode = clinicCode;
 		this.clinicName = clinicName;
+		activated = Boolean.FALSE;
 	}
 
     public User toUser() {

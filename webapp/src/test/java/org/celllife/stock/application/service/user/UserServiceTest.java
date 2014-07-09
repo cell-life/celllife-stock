@@ -37,6 +37,7 @@ public class UserServiceTest {
 			Assert.assertNotNull(savedUser.getId());
 			Assert.assertNotNull(savedUser.getEncryptedPassword());
 			Assert.assertNotNull(savedUser.getSalt());
+			Assert.assertEquals(Boolean.FALSE, savedUser.getActivated());
 		} finally {
 			if (userId != null) userRepository.delete(userId);
 		}
