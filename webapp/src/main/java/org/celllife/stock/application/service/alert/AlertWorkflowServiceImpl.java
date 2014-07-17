@@ -96,8 +96,8 @@ public class AlertWorkflowServiceImpl implements AlertWorkflowService {
     		contact.setMsisdn(msisdn);
     		List<ContactDto> contacts = new ArrayList<ContactDto>();
     		contacts.add(contact);
-    		String campaignName = "StockApp notification "+new Date()+"-"+msisdn;
-    		String campaignDescription = "StockApp notification JustSendSMS to "+msisdn;
+    		String campaignName = "StockApp notification "+new Date()+"-"+msisdn+"-"+alert.getDrug().getBarcode();
+    		String campaignDescription = "StockApp notification JustSendSMS to "+msisdn+" for "+alert.getDrug().getName();
     		try {
     			communicateClient.getCampaignService().createNewCampaign(campaignName, campaignDescription, smsText, contacts);
     		} catch (RestCommandException e) {
